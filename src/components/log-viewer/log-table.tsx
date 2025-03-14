@@ -8,7 +8,7 @@ interface LogTableProps {
   isSearching: boolean;
   isLoadingMore: boolean;
   totalFilteredCount: number;
-  tableRef: React.RefObject<HTMLDivElement>;
+  tableRef: React.RefObject<HTMLDivElement | null>;
   handleScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   handleSort: (field: keyof LogEntry) => void;
   sortField: keyof LogEntry;

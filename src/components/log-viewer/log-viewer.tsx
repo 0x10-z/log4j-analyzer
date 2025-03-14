@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { LogEntry } from "../../types/log-types";
 import { FilterBar } from "./filter-bar";
 import { LogTable } from "./log-table";
@@ -40,11 +40,8 @@ export function LogViewer({ logs }: LogViewerProps) {
   const {
     searchText,
     setSearchText,
-    levelFilter,
     setLevelFilter,
-    classFilter,
     setClassFilter,
-    methodFilter,
     setMethodFilter,
     sortField,
     //setSortField,
