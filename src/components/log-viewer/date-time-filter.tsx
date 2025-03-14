@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { LogEntry } from "../../types/log-types";
-import { start } from "repl";
 
 interface DateTimeFilterProps {
   logs: LogEntry[];
