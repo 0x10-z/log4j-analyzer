@@ -10,7 +10,7 @@ function App() {
     setLogs(parsedLogs);
   };
   return (
-    <main className="container mx-auto p-4 max-w-7xl">
+    <main className="container mx-auto p-4 max-w-8xl">
       <h1 className="text-3xl font-bold mb-6 text-center">
         Log4j XML Analyzer
       </h1>

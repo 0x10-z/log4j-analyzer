@@ -5,6 +5,7 @@ import type React from "react";
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useDebounce } from "../hooks/use-debounce";
 import type { LogEntry } from "../types/log-types";
+import Select from "react-select";
 
 interface LogViewerProps {
   logs: LogEntry[];
@@ -307,6 +308,30 @@ export function LogViewer({ logs }: LogViewerProps) {
     }
   }, []);
 
+  const allMethodsOptions = [
+    { value: "all", label: "All methods" },
+    ...uniqueMethods.map((method) => ({
+      value: method,
+      label: method,
+    })),
+  ];
+
+  const allLevelsOptions = [
+    { value: "all", label: "All levels" },
+    ...uniqueLevels.map((method) => ({
+      value: method,
+      label: method,
+    })),
+  ];
+
+  const allClassesOptions = [
+    { value: "all", label: "All classes" },
+    ...uniqueClasses.map((method) => ({
+      value: method,
+      label: method,
+    })),
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 justify-between">
@@ -477,18 +502,14 @@ export function LogViewer({ logs }: LogViewerProps) {
             </h3>
           </div>
           <div className="pt-3">
-            <select
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              value={levelFilter}
-              onChange={(e) => setLevelFilter(e.target.value)}
-            >
-              <option value="all">All levels</option>
-              {uniqueLevels.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="w-full text-black"
+              options={allLevelsOptions}
+              onChange={(selected) => setLevelFilter(selected?.value || "all")}
+              placeholder="Select a level"
+              menuPortalTarget={document.body} // Evita que el dropdown se corte
+              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }} // Mantiene el dropdown encima
+            />
           </div>
         </div>
 
@@ -513,18 +534,14 @@ export function LogViewer({ logs }: LogViewerProps) {
             </h3>
           </div>
           <div className="pt-3">
-            <select
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              value={classFilter}
-              onChange={(e) => setClassFilter(e.target.value)}
-            >
-              <option value="all">All classes</option>
-              {uniqueClasses.map((className) => (
-                <option key={className} value={className}>
-                  {className.split(".").pop()}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="w-full text-black"
+              options={allClassesOptions}
+              onChange={(selected) => setClassFilter(selected?.value || "all")}
+              placeholder="Select a level"
+              menuPortalTarget={document.body} // Evita que el dropdown se corte
+              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }} // Mantiene el dropdown encima
+            />
           </div>
         </div>
 
@@ -549,18 +566,14 @@ export function LogViewer({ logs }: LogViewerProps) {
             </h3>
           </div>
           <div className="pt-3">
-            <select
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              value={methodFilter}
-              onChange={(e) => setMethodFilter(e.target.value)}
-            >
-              <option value="all">All methods</option>
-              {uniqueMethods.map((method) => (
-                <option key={method} value={method}>
-                  {method}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="w-full text-black"
+              options={allMethodsOptions}
+              onChange={(selected) => setMethodFilter(selected?.value || "all")}
+              placeholder="All methods"
+              menuPortalTarget={document.body} // Evita que el dropdown se corte
+              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }} // Mantiene el dropdown encima
+            />
           </div>
         </div>
       </div>
