@@ -1,9 +1,8 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
-import { format, parseISO, isValid, addHours } from "date-fns";
+import { useState, useEffect } from "react";
+import { LogEntry } from "../../types/log-types";
 
 interface DateTimeFilterProps {
+  logs: LogEntry[];
   startDateTime: string;
   setStartDateTime: (value: string) => void;
   endDateTime: string;
@@ -12,9 +11,8 @@ interface DateTimeFilterProps {
   setIsDateFilterActive: (value: boolean) => void;
 }
 
-const factor = 10000;
-
 export function DateTimeFilter({
+  logs,
   startDateTime,
   setStartDateTime,
   endDateTime,
@@ -22,104 +20,145 @@ export function DateTimeFilter({
   isDateFilterActive,
   setIsDateFilterActive,
 }: DateTimeFilterProps) {
-  const minDate = isValid(parseISO(startDateTime))
-    ? parseISO(startDateTime)
-    : new Date();
-  const maxDate = isValid(parseISO(endDateTime))
-    ? parseISO(endDateTime)
-    : addHours(new Date(), 6);
+  const [error, setError] = useState("");
 
-  // Convertir timestamps a segundos
-  const minTimestamp = Math.floor(minDate.getTime() / factor);
-  const maxTimestamp = Math.floor(maxDate.getTime() / factor);
+  // Store initial dates when the component mounts
+  const [initialStartDate, setInitialStartDate] = useState<string>("");
+  const [initialEndDate, setInitialEndDate] = useState<string>("");
 
-  const [selectedRange, setSelectedRange] = useState<[number, number]>([
-    minTimestamp,
-    maxTimestamp,
-  ]);
-
-  const isSliding = useRef(false);
-
-  const formattedSelectedTimes = useMemo(() => {
-    return selectedRange.map((timestamp) =>
-      format(new Date(timestamp * factor), "yyyy-MM-dd HH:mm")
-    );
-  }, [selectedRange]);
-
-  const handleSliderChange = (value: [number, number]) => {
-    const [newMin, newMax] = value;
-    console.log(newMin, newMax);
-
-    if (newMin >= newMax) return;
-
-    isSliding.current = true;
-    setSelectedRange(value);
-
-    setStartDateTime(format(new Date(newMin * factor), "yyyy-MM-dd'T'HH:mm"));
-    setEndDateTime(format(new Date(newMax * factor), "yyyy-MM-dd'T'HH:mm"));
+  // Function to safely parse a date string and adjust for local timezone
+  const parseDate = (date: Date): string => {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
   };
 
+  // Adjust start and end dates when the component mounts
   useEffect(() => {
-    if (isSliding.current) {
-      isSliding.current = false;
-      return;
+    if (logs.length > 0) {
+      const timestamps = logs
+        .map((log) => new Date(log.timestamp).getTime())
+        .filter((ts) => !isNaN(ts))
+        .sort((a, b) => a - b);
+
+      if (timestamps.length > 0) {
+        const firstTimestamp = new Date(timestamps[0] - 1000 * 60); // Subtract 1 min
+        const lastTimestamp = new Date(
+          timestamps[timestamps.length - 1] + 1000 * 60
+        ); // Add 1 min
+
+        const adjustedStart = parseDate(firstTimestamp);
+        const adjustedEnd = parseDate(lastTimestamp);
+
+        setInitialStartDate(adjustedStart);
+        setInitialEndDate(adjustedEnd);
+
+        setStartDateTime(adjustedStart);
+        setEndDateTime(adjustedEnd);
+      }
     }
+  }, [logs, setStartDateTime, setEndDateTime]);
 
-    const newMin = isValid(parseISO(startDateTime))
-      ? Math.floor(parseISO(startDateTime).getTime() / factor)
-      : minTimestamp;
-    const newMax = isValid(parseISO(endDateTime))
-      ? Math.floor(parseISO(endDateTime).getTime() / factor)
-      : maxTimestamp;
+  // Sync changes in input fields
+  const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newStart = e.target.value;
+    if (newStart < initialStartDate) {
+      setError("The start date cannot be earlier than the allowed range.");
+    } else if (newStart > endDateTime) {
+      setError("The start date cannot be later than the selected end date.");
+    } else {
+      setError("");
+      setStartDateTime(newStart);
+    }
+  };
 
-    setSelectedRange([newMin, newMax]);
-  }, [startDateTime, endDateTime]);
+  const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEnd = e.target.value;
+    if (newEnd > initialEndDate) {
+      setError("The end date cannot be later than the allowed range.");
+    } else if (newEnd < startDateTime) {
+      setError("The end date cannot be earlier than the selected start date.");
+    } else {
+      setError("");
+      setEndDateTime(newEnd);
+    }
+  };
+
+  // Restore initial dates if the user clears them
+  const resetToInitialDates = () => {
+    setStartDateTime(initialStartDate);
+    setEndDateTime(initialEndDate);
+  };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-      <div className="pb-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="text-sm font-medium">🕒 Select Date & Time Range</h3>
-        <div className="flex items-center">
+    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-lg mx-auto">
+      <div className="flex justify-between items-center border-b pb-4">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+          📆 Date & Time Filter
+        </h2>
+        <label className="flex items-center space-x-2 cursor-pointer">
           <input
             type="checkbox"
-            id="enable-date-filter"
             checked={isDateFilterActive}
             onChange={(e) => setIsDateFilterActive(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="w-5 h-5 text-blue-600 dark:text-blue-400 focus:ring-blue-500 border-gray-300 rounded"
           />
-          <label
-            htmlFor="enable-date-filter"
-            className="ml-2 text-sm text-gray-700 dark:text-gray-300"
-          >
+          <span className="text-sm text-gray-700 dark:text-gray-300">
             Enable
+          </span>
+        </label>
+      </div>
+
+      <div className="flex flex-row w-full mt-4 space-x-4">
+        {/* Start Date & Time Input */}
+        <div className="w-1/2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Start Date & Time
           </label>
+          <input
+            type="datetime-local"
+            value={startDateTime}
+            onChange={handleStartChange}
+            disabled={!isDateFilterActive}
+            min={initialStartDate}
+            max={initialEndDate}
+            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                 text-gray-900 dark:text-white dark:bg-gray-800 dark:border-gray-600"
+          />
+        </div>
+
+        {/* End Date & Time Input */}
+        <div className="w-1/2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            End Date & Time
+          </label>
+          <input
+            type="datetime-local"
+            value={endDateTime}
+            onChange={handleEndChange}
+            disabled={!isDateFilterActive}
+            min={initialStartDate}
+            max={initialEndDate}
+            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                 text-gray-900 dark:text-white dark:bg-gray-800 dark:border-gray-600"
+          />
         </div>
       </div>
 
-      <div className="pt-3 space-y-3">
-        {/* Slider */}
-        <Slider
-          range
-          min={minTimestamp}
-          max={maxTimestamp}
-          value={selectedRange}
-          onChange={(value) => handleSliderChange(value as [number, number])}
-          step={6} // Precisión de 1 minuto en segundos
-          disabled={!isDateFilterActive}
-          className="mt-4"
-          trackStyle={[{ backgroundColor: "#4A90E2" }]}
-          handleStyle={[
-            { backgroundColor: "#FF6F61", borderColor: "#FF6F61" },
-            { backgroundColor: "#50E3C2", borderColor: "#50E3C2" },
-          ]}
-        />
+      {/* Restore Button */}
+      <button
+        onClick={resetToInitialDates}
+        className="w-full mt-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+      >
+        Restore Initial Dates
+      </button>
 
-        {/* Mostrar fechas seleccionadas */}
-        <div className="flex justify-between text-sm mt-2">
-          <span className="text-red-500">{formattedSelectedTimes[0]}</span>
-          <span className="text-green-500">{formattedSelectedTimes[1]}</span>
-        </div>
-      </div>
+      {/* Error Message */}
+      {error && (
+        <p className="mt-2 text-red-500 text-sm font-medium bg-red-100 dark:bg-red-900 p-2 rounded-md">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

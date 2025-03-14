@@ -27,12 +27,12 @@ export function LogViewer({ logs }: LogViewerProps) {
   const [columnSelectorOpen, setColumnSelectorOpen] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
     {
+      actions: true,
       timestamp: true,
       level: true,
       className: true,
       method: true,
       message: true,
-      actions: true,
     }
   );
 
@@ -249,6 +249,7 @@ export function LogViewer({ logs }: LogViewerProps) {
       </div>
       <div>
         <DateTimeFilter
+          logs={logs}
           startDateTime={startDateTime}
           setStartDateTime={setStartDateTime}
           endDateTime={endDateTime}
@@ -257,7 +258,6 @@ export function LogViewer({ logs }: LogViewerProps) {
           setIsDateFilterActive={setIsDateFilterActive}
         />
       </div>
-
       <LogTable
         visibleLogs={visibleLogs}
         isSearching={isSearching}

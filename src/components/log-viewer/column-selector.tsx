@@ -75,16 +75,18 @@ export function ColumnSelector({
           </button>
         </div>
 
-        <div className="p-4 space-y-3 grid grid-cols-2 gap-2">
+        {/* Grid de botones */}
+        <div className="p-4 grid grid-cols-2 gap-2">
           {Object.entries(visibleColumns).map(([column, isVisible]) => (
             <button
               key={column}
               onClick={() => toggleColumn(column)}
-              className={`px-4 py-2 rounded-md transition-colors text-center text-sm font-medium ${
-                isVisible
-                  ? "bg-gray-800 text-white hover:bg-gray-900"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-              }`}
+              className={`w-full min-w-[100px] px-4 py-2 rounded-md transition-colors text-center text-sm font-medium 
+                ${
+                  isVisible
+                    ? "bg-gray-800 text-white hover:bg-gray-900"
+                    : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                }`}
             >
               {columnLabels[column] || column}
             </button>
