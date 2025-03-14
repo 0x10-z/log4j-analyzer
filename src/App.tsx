@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FileUploader } from "./components/file-uploader";
-import { LogViewer } from "./components/log-viewer";
+import { LogViewer } from "./components/log-viewer/log-viewer";
 import type { LogEntry } from "./types/log-types";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     setLogs(parsedLogs);
   };
   return (
-    <main className="container mx-auto p-4 max-w-8xl">
+    <main className="container mx-auto p-4 max-w-9xl">
       <h1 className="text-3xl font-bold mb-6 text-center">
         Log4j XML Analyzer
       </h1>
