@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { LogEntry } from "../../types/log-types";
 import { useHighlightText } from "../../hooks/use-highlight-text";
 import getLevelBadgeColor from "../../utils/log-utils";

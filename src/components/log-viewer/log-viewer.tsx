@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { LogEntry } from "../../types/log-types";
 import { FilterBar } from "./filter-bar";
 import { LogTable } from "./log-table";
-import { FindingsModal } from "./findings-modal";
 import { LogDetailModal } from "./log-detail-modal";
 import { ColumnSelector } from "./column-selector";
 import { useLogFiltering } from "../../hooks/use-log-filtering";
@@ -18,7 +17,6 @@ export function LogViewer({ logs }: LogViewerProps) {
   // For findings feature
   const [findings, setFindings] = useState<LogEntry[]>([]);
   const [showFindings, setShowFindings] = useState(false);
-  const [findingsModalOpen, setFindingsModalOpen] = useState(false);
 
   // For detail modal
   const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -159,7 +157,6 @@ export function LogViewer({ logs }: LogViewerProps) {
         findingsCount={findings.length}
         resetFilters={resetFilters}
         exportData={() => (showFindings ? exportFindings() : null)}
-        openFindingsModal={() => setFindingsModalOpen(true)}
         openColumnSelector={() => setColumnSelectorOpen(true)}
       />
 
@@ -293,16 +290,6 @@ export function LogViewer({ logs }: LogViewerProps) {
         initialStartDate={initialStartDate}
         initialEndDate={initialEndDate}
       />
-
-      {/* Modals */}
-      {findingsModalOpen && (
-        <FindingsModal
-          findings={findings}
-          removeFromFindings={removeFromFindings}
-          exportFindings={exportFindings}
-          onClose={() => setFindingsModalOpen(false)}
-        />
-      )}
 
       {detailModalOpen && selectedLog && (
         <LogDetailModal

@@ -45,7 +45,27 @@ export function LogDetailModal({
         className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
       >
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Log Entry Details</h2>
+          <div className="flex items-center gap-4 p-2">
+            <div className="flex flex-col items-center text-center space-y-2">
+              <span
+                className={`px-3 py-1 text-xs font-medium rounded-full ${getLevelBadgeColor(
+                  log.level
+                )}`}
+              >
+                {log.level}
+              </span>
+              <p className="text-xs text-gray-500">Thread: {log.thread}</p>
+            </div>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+              Log Entry Details
+            </h2>
+            <div className="ml-auto">
+              <p className="font-mono text-sm text-gray-600">
+                {log.formattedTimestamp}
+              </p>
+            </div>
+          </div>
+
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -68,58 +88,32 @@ export function LogDetailModal({
         </div>
 
         <div className="p-4 overflow-auto flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-4">
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                  Timestamp
-                </h3>
-                <p className="font-mono text-sm">{log.formattedTimestamp}</p>
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                  Level
-                </h3>
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${getLevelBadgeColor(
-                    log.level
-                  )}`}
-                >
-                  {log.level}
-                </span>
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                  Thread
-                </h3>
-                <p>{log.thread}</p>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="space-y-4">
               <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
                   Class
                 </h3>
-                <p className="font-mono text-sm break-all">{log.className}</p>
+                <p className="font-mono text-xs break-all">{log.className}</p>
               </div>
-
+            </div>
+            <div className="space-y-4">
               <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
                   Method
                 </h3>
-                <p className="font-mono text-sm">{log.method}</p>
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                  Logger
-                </h3>
-                <p className="font-mono text-sm break-all">{log.logger}</p>
+                <p className="font-mono text-xs  overflow-auto">{log.method}</p>
               </div>
             </div>
+          </div>
+
+          <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              Logger
+            </h3>
+            <p className="font-mono text-xs bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
+              {log.logger}
+            </p>
           </div>
 
           <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
@@ -171,7 +165,7 @@ export function LogDetailModal({
             {!isInFindings ? (
               <button
                 onClick={addToFindings}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors flex items-center gap-2"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

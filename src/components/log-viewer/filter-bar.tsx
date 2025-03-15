@@ -7,7 +7,6 @@ interface FilterBarProps {
   findingsCount: number;
   resetFilters: () => void;
   exportData: () => void;
-  openFindingsModal: () => void;
   openColumnSelector: () => void;
 }
 
@@ -20,11 +19,10 @@ export function FilterBar({
   findingsCount,
   resetFilters,
   exportData,
-  openFindingsModal,
   openColumnSelector,
 }: FilterBarProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-between shadow-xl">
+    <div className="flex flex-col sm:flex-row gap-4 justify-between ">
       <div className="relative flex-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +75,7 @@ export function FilterBar({
         <button
           className={`px-3 py-2 border rounded-md flex items-center gap-1 ${
             showFindings
-              ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+              ? "bg-gray-800 text-white border-gray-700 hover:bg-gray-900"
               : "border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
           }`}
           onClick={toggleFindingsView}
@@ -133,37 +131,14 @@ export function FilterBar({
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            viewBox="0 0 1024 1024"
+            width="1em"
+            height="1em"
           >
             <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-            />
-          </svg>
-        </button>
-
-        <button
-          className="p-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-          onClick={openFindingsModal}
-          title="View findings"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M880 912H144c-17.7 0-32-14.3-32-32V144c0-17.7 14.3-32 32-32h360c4.4 0 8 3.6 8 8v56c0 4.4-3.6 8-8 8H184v656h656V520c0-4.4 3.6-8 8-8h56c4.4 0 8 3.6 8 8v360c0 17.7-14.3 32-32 32M770.87 199.131l-52.2-52.2c-4.7-4.7-1.9-12.8 4.7-13.6l179.4-21c5.1-.6 9.5 3.7 8.9 8.9l-21 179.4c-.8 6.6-8.9 9.4-13.6 4.7l-52.4-52.4l-256.2 256.2c-3.1 3.1-8.2 3.1-11.3 0l-42.4-42.4c-3.1-3.1-3.1-8.2 0-11.3z"
             />
           </svg>
         </button>
