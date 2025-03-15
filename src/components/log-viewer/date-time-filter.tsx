@@ -3,6 +3,8 @@ import { LogEntry } from "../../types/log-types";
 
 interface DateTimeFilterProps {
   logs: LogEntry[];
+  initialStartDate: string;
+  initialEndDate: string;
   startDateTime: string;
   setStartDateTime: (value: string) => void;
   endDateTime: string;
@@ -13,6 +15,8 @@ interface DateTimeFilterProps {
 
 export function DateTimeFilter({
   logs,
+  initialStartDate,
+  initialEndDate,
   startDateTime,
   setStartDateTime,
   endDateTime,
@@ -22,42 +26,19 @@ export function DateTimeFilter({
 }: DateTimeFilterProps) {
   const [error, setError] = useState("");
 
-  // Store initial dates when the component mounts
-  const [initialStartDate, setInitialStartDate] = useState<string>("");
-  const [initialEndDate, setInitialEndDate] = useState<string>("");
-
-  // Function to safely parse a date string and adjust for local timezone
-  const parseDate = (date: Date): string => {
-    return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-  };
-
   // Adjust start and end dates when the component mounts
   useEffect(() => {
     if (logs.length > 0) {
-      const timestamps = logs
-        .map((log) => new Date(log.timestamp).getTime())
-        .filter((ts) => !isNaN(ts))
-        .sort((a, b) => a - b);
-
-      if (timestamps.length > 0) {
-        const firstTimestamp = new Date(timestamps[0] - 1000 * 60); // Subtract 1 min
-        const lastTimestamp = new Date(
-          timestamps[timestamps.length - 1] + 1000 * 60
-        ); // Add 1 min
-
-        const adjustedStart = parseDate(firstTimestamp);
-        const adjustedEnd = parseDate(lastTimestamp);
-
-        setInitialStartDate(adjustedStart);
-        setInitialEndDate(adjustedEnd);
-
-        setStartDateTime(adjustedStart);
-        setEndDateTime(adjustedEnd);
-      }
+      setStartDateTime(initialStartDate);
+      setEndDateTime(initialEndDate);
     }
-  }, [logs, setStartDateTime, setEndDateTime]);
+  }, [
+    logs,
+    setStartDateTime,
+    setEndDateTime,
+    initialStartDate,
+    initialEndDate,
+  ]);
 
   // Sync changes in input fields
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LogEntry } from "../../types/log-types";
 import { useHighlightText } from "../../hooks/use-highlight-text";
 import getLevelBadgeColor from "../../utils/log-utils";
@@ -20,6 +20,8 @@ interface LogTableProps {
   showFindings: boolean;
   searchText: string;
   visibleColumns: Record<string, boolean>;
+  initialStartDate: string;
+  initialEndDate: string;
 }
 
 export function LogTable({
@@ -39,8 +41,13 @@ export function LogTable({
   showFindings,
   searchText,
   visibleColumns,
+  initialStartDate,
+  initialEndDate,
 }: LogTableProps) {
   const highlightText = useHighlightText(searchText);
+
+  const startDate = new Date(initialStartDate).toLocaleString();
+  const endDate = new Date(initialEndDate).toLocaleString();
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
@@ -53,6 +60,10 @@ export function LogTable({
           {visibleLogs.length < totalFilteredCount
             ? `(showing ${visibleLogs.length})`
             : ""}
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          This file contains logs from <strong>{startDate}</strong> to{" "}
+          <strong>{endDate}</strong>
         </p>
       </div>
       <div className="p-4">

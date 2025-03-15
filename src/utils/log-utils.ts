@@ -1,3 +1,5 @@
+import { LogEntry } from "../types/log-types";
+
 const getLevelBadgeColor = (level: string) => {
   switch (level) {
     case "DEBUG":
@@ -16,3 +18,33 @@ const getLevelBadgeColor = (level: string) => {
 };
 
 export default getLevelBadgeColor;
+
+const parseDate = (date: Date): string => {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+};
+
+export const getLogsMinimumAndMaximumDate = (logs: LogEntry[]) => {
+  const timestamps = logs
+    .map((log) => new Date(log.timestamp).getTime())
+    .filter((ts) => !isNaN(ts))
+    .sort((a, b) => a - b);
+
+  if (timestamps.length > 0) {
+    const firstTimestamp = new Date(timestamps[0] - 1000 * 60); // Subtract 1 min
+    const lastTimestamp = new Date(
+      timestamps[timestamps.length - 1] + 1000 * 60
+    ); // Add 1 min
+
+    const adjustedStart = parseDate(firstTimestamp);
+    const adjustedEnd = parseDate(lastTimestamp);
+
+    return {
+      start: adjustedStart,
+      end: adjustedEnd,
+    };
+  } else {
+    throw new Error("No valid timestamps found in the logs.");
+  }
+};

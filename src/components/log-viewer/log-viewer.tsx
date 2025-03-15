@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { LogEntry } from "../../types/log-types";
 import { FilterBar } from "./filter-bar";
 import { LogTable } from "./log-table";
@@ -8,6 +8,7 @@ import { ColumnSelector } from "./column-selector";
 import { useLogFiltering } from "../../hooks/use-log-filtering";
 import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
+import { getLogsMinimumAndMaximumDate } from "../../utils/log-utils";
 
 interface LogViewerProps {
   logs: LogEntry[];
@@ -132,6 +133,21 @@ export function LogViewer({ logs }: LogViewerProps) {
     })),
   ];
 
+  const [initialStartDate, setInitialStartDate] = useState<string>("");
+  const [initialEndDate, setInitialEndDate] = useState<string>("");
+
+  useEffect(() => {
+    if (logs.length > 0) {
+      const { start, end } = getLogsMinimumAndMaximumDate(logs);
+
+      setInitialStartDate(start);
+      setInitialEndDate(end);
+
+      setStartDateTime(start);
+      setEndDateTime(end);
+    }
+  }, [logs, setStartDateTime, setEndDateTime]);
+
   return (
     <div className="space-y-4">
       <FilterBar
@@ -247,6 +263,8 @@ export function LogViewer({ logs }: LogViewerProps) {
       <div>
         <DateTimeFilter
           logs={logs}
+          initialStartDate={initialStartDate}
+          initialEndDate={initialEndDate}
           startDateTime={startDateTime}
           setStartDateTime={setStartDateTime}
           endDateTime={endDateTime}
@@ -272,6 +290,8 @@ export function LogViewer({ logs }: LogViewerProps) {
         showFindings={showFindings}
         searchText={searchText}
         visibleColumns={visibleColumns}
+        initialStartDate={initialStartDate}
+        initialEndDate={initialEndDate}
       />
 
       {/* Modals */}
