@@ -1,9 +1,9 @@
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { LogEntry } from "@/types/log-types";
 import { extractBVCLog } from "@/utils/zip-utils";
 import { Entry } from "@zip.js/zip.js";
+import { parseXmlContent } from "@/utils/log-utils";
 
 interface FileUploaderProps {
   onLogsLoaded: (logs: LogEntry[]) => void;
@@ -57,7 +57,6 @@ export function FileUploader({
       return;
     }
 
-    // Simulate progress for large files
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) {
@@ -84,9 +83,8 @@ export function FileUploader({
 
         const xmlContent = e.target?.result as string;
 
-        // Use a worker for large files if available
         setTimeout(() => {
-          parseXmlContent(xmlContent);
+          handleXmlParsing(xmlContent);
           setProgress(100);
           setIsLoading(false);
         }, 0);
@@ -122,157 +120,31 @@ export function FileUploader({
     }
   };
 
-  const parseXmlContent = (xmlContent: string) => {
+  async function handleXmlParsing(xmlContent: string) {
     try {
-      // Process in chunks for large files
-      const chunkSize = 1000000; // 1MB chunks
-      const totalSize = xmlContent.length;
+      setProgress(5); // Start process
 
-      // For very large files, we'll process in chunks
-      if (totalSize > chunkSize * 5) {
-        let processedChunks = 0;
-        const totalChunks = Math.ceil(totalSize / chunkSize);
-        const allLogs: LogEntry[] = [];
+      const logs = await parseXmlContent(xmlContent, 1000000, (progress) => {
+        setProgress(progress); // Update progress
+      });
 
-        const processNextChunk = (startIndex: number) => {
-          const endIndex = Math.min(startIndex + chunkSize, totalSize);
-          const chunk = xmlContent.substring(startIndex, endIndex);
-
-          // If this is not the first chunk, we need to find a complete log entry
-          let processableChunk = chunk;
-          if (startIndex > 0) {
-            const firstEventIndex = chunk.indexOf("<log4j:event");
-            if (firstEventIndex > 0) {
-              processableChunk = chunk.substring(firstEventIndex);
-            }
-          }
-
-          // If this is not the last chunk, find the last complete log entry
-          if (endIndex < totalSize) {
-            const lastEventEndIndex =
-              processableChunk.lastIndexOf("</log4j:event>");
-            if (lastEventEndIndex > 0) {
-              processableChunk = processableChunk.substring(
-                0,
-                lastEventEndIndex + 14
-              ); // 14 is the length of '</log4j:event>'
-            }
-          }
-
-          // Parse this chunk
-          const wrappedXml = `<root>${processableChunk}</root>`;
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(wrappedXml, "text/xml");
-
-          // Get all log4j:event elements
-          const logEvents = xmlDoc.getElementsByTagName("log4j:event");
-
-          for (let i = 0; i < logEvents.length; i++) {
-            const log = parseLogEvent(logEvents[i], allLogs.length);
-            allLogs.push(log);
-          }
-
-          processedChunks++;
-          setProgress(
-            Math.min(95, Math.round((processedChunks / totalChunks) * 90))
-          );
-
-          // Process next chunk or finish
-          if (endIndex < totalSize) {
-            setTimeout(() => processNextChunk(endIndex), 0);
-          } else {
-            onLogsLoaded(allLogs);
-          }
-        };
-
-        // Start processing chunks
-        processNextChunk(0);
-      } else {
-        // For smaller files, process all at once
-        const wrappedXml = `<root>${xmlContent}</root>`;
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(wrappedXml, "text/xml");
-
-        // Get all log4j:event elements
-        const logEvents = xmlDoc.getElementsByTagName("log4j:event");
-        const parsedLogs: LogEntry[] = [];
-
-        for (let i = 0; i < logEvents.length; i++) {
-          const log = parseLogEvent(logEvents[i], i);
-          parsedLogs.push(log);
-        }
-
-        onLogsLoaded(parsedLogs);
-      }
+      setProgress(100); // Complete process
+      onLogsLoaded(logs);
     } catch (err) {
       setError("Error parsing the XML content");
       console.error(err);
     }
-  };
-
-  const parseLogEvent = (event: Element, index: number): LogEntry => {
-    const timestamp = event.getAttribute("timestamp");
-    const level = event.getAttribute("level");
-    const logger = event.getAttribute("logger");
-    const thread = event.getAttribute("thread");
-
-    // Get message
-    const messageElements = event.getElementsByTagName("log4j:message");
-    const message =
-      messageElements.length > 0 ? messageElements[0].textContent : "";
-
-    // Get location info
-    const locationElements = event.getElementsByTagName("log4j:locationInfo");
-    const className =
-      locationElements.length > 0
-        ? locationElements[0].getAttribute("class")
-        : "";
-    const method =
-      locationElements.length > 0
-        ? locationElements[0].getAttribute("method")
-        : "";
-
-    // Get properties
-    const propertiesElements = event.getElementsByTagName("log4j:properties");
-    const properties: Record<string, string> = {};
-
-    if (propertiesElements.length > 0) {
-      const dataElements =
-        propertiesElements[0].getElementsByTagName("log4j:data");
-      for (let j = 0; j < dataElements.length; j++) {
-        const name = dataElements[j].getAttribute("name");
-        const value = dataElements[j].getAttribute("value");
-        if (name && value) {
-          properties[name] = value;
-        }
-      }
-    }
-
-    return {
-      id: index,
-      timestamp: timestamp ? Number.parseInt(timestamp) : 0,
-      formattedTimestamp:
-        properties["Sender Timestamp"] ||
-        new Date(Number.parseInt(timestamp || "0")).toISOString(),
-      level: level || "",
-      logger: logger || "",
-      thread: thread || "",
-      message: message || "",
-      className: className || "",
-      method: method || "",
-      properties,
-    };
-  };
+  }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl">
       <div className="p-6">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-4">
-            <h3 className="text-xl font-medium">Processing file...</h3>
+            <h3 className="text-xl font-semibold">Processing file...</h3>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div
-                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                className="bg-gray-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -284,7 +156,7 @@ export function FileUploader({
           <div
             className={`border-2 border-dashed rounded-lg p-12 text-center ${
               isDragging
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                ? "border-gray-500 bg-gray-50 dark:bg-gray-900/20"
                 : "border-gray-300 dark:border-gray-600"
             }`}
             onDragOver={handleDragOver}
@@ -306,11 +178,11 @@ export function FileUploader({
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
-              <h3 className="text-xl font-medium">
-                Drag and drop your log4j XML file
+              <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
+                Drag & drop your log4j XML file
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                Or click to select a file
+                or click to select a file
               </p>
               <label className="cursor-pointer">
                 <input

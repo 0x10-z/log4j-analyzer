@@ -7,7 +7,9 @@ import { ColumnSelector } from "./column-selector";
 import { useLogFiltering } from "@/hooks/use-log-filtering";
 import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
-import { getLogsMinimumAndMaximumDate } from "@/utils/log-utils";
+import getLevelBadgeColor, {
+  getLogsMinimumAndMaximumDate,
+} from "@/utils/log-utils";
 import { Entry } from "@zip.js/zip.js";
 
 interface LogViewerProps {
@@ -112,28 +114,97 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
     setDetailModalOpen(true);
   };
 
-  const allMethodsOptions = [
-    { value: "all", label: "All methods" },
-    ...uniqueMethods.map((method) => ({
-      value: method,
-      label: method,
+  const allLevelsOptions = [
+    { value: "all", label: "All levels" },
+    ...uniqueLevels.map((level) => ({
+      value: level,
+      label: (
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${getLevelBadgeColor(
+            level
+          )}`}
+        >
+          {level}
+        </span>
+      ),
     })),
   ];
 
-  const allLevelsOptions = [
-    { value: "all", label: "All levels" },
-    ...uniqueLevels.map((method) => ({
-      value: method,
-      label: method,
-    })),
-  ];
+  const extractClassName = (totalClassName: string) => {
+    const parts = totalClassName.includes(".")
+      ? totalClassName.split(".")
+      : [totalClassName];
+    return {
+      mainName: parts.pop() || "Unknown",
+      restOfClass: parts.join("."),
+    };
+  };
 
   const allClassesOptions = [
     { value: "all", label: "All classes" },
-    ...uniqueClasses.map((method) => ({
-      value: method,
-      label: method,
-    })),
+    ...uniqueClasses
+      .filter((className) => className && className.trim() !== "")
+      .map((className) => {
+        const { mainName, restOfClass } = extractClassName(className);
+
+        return {
+          value: className,
+          mainName,
+          restOfClass,
+          label: (
+            <div>
+              <p className="text-xs text-gray-500">{restOfClass}</p>
+              <span className="text-gray-800 font-bold">{mainName}</span>
+            </div>
+          ),
+        };
+      })
+      .sort((a, b) => a.mainName.localeCompare(b.mainName)),
+  ];
+
+  const allMethodsOptions = [
+    { value: "all", label: "All methods" },
+    ...uniqueMethods
+      .filter((method) => method && method.trim() !== "")
+      .map((method) => {
+        const [firstPart, ...rest] = method.includes(" ")
+          ? method.split(" ")
+          : [method];
+        const methodResult = firstPart;
+        const methodName = rest.length > 0 ? rest.join(" ") : "Unknown";
+        const realMethodName = methodName.includes("(")
+          ? methodName.split("(")[0]
+          : methodName;
+
+        const methodParameters = methodName.includes("(")
+          ? methodName
+              .split("(")[1]
+              .split(",")
+              .map((param) => param.trim())
+              .filter((param) => param !== "")
+          : [];
+
+        const methodParametersWithoutTypes = methodParameters.map((param) => {
+          const { mainName } = extractClassName(param);
+          return mainName;
+        });
+
+        return {
+          value: method,
+          methodName: realMethodName,
+          methodResult,
+          methodParameters: methodParametersWithoutTypes,
+          label: (
+            <div>
+              <p className="text-xs text-gray-500">{methodResult}</p>
+              <span className="text-gray-800 font-bold">
+                {realMethodName}({methodParametersWithoutTypes.join(", ")})
+              </span>
+            </div>
+          ),
+        };
+      })
+      .sort((a, b) => a.methodName.localeCompare(b.methodName)),
   ];
 
   const [initialStartDate, setInitialStartDate] = useState<string>("");
@@ -165,8 +236,9 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
         openColumnSelector={() => setColumnSelectorOpen(true)}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 shadow-xl">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+      <div className="grid grid-cols-12 gap-3 shadow-xl">
+        {/* Level ocupa menos espacio */}
+        <div className="col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
@@ -193,12 +265,13 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
               onChange={(selected) => setLevelFilter(selected?.value || "all")}
               placeholder="Select a level"
               menuPortalTarget={document.body}
-              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menu: (base) => ({ ...base, zIndex: 99 }) }}
             />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        {/* Class y Method ocupan más espacio */}
+        <div className="col-span-5 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
@@ -225,12 +298,12 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
               onChange={(selected) => setClassFilter(selected?.value || "all")}
               placeholder="Select a class"
               menuPortalTarget={document.body}
-              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menu: (base) => ({ ...base, zIndex: 99 }) }}
             />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <div className="col-span-5 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
@@ -257,11 +330,12 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
               onChange={(selected) => setMethodFilter(selected?.value || "all")}
               placeholder="Select a method"
               menuPortalTarget={document.body}
-              styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+              styles={{ menu: (base) => ({ ...base, zIndex: 99 }) }}
             />
           </div>
         </div>
       </div>
+
       <div>
         <DateTimeFilter
           logs={logs}

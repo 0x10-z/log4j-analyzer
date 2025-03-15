@@ -21,11 +21,11 @@ function App() {
   };
 
   return (
-    <main className="container mx-auto p-4 max-w-9xl">
+    <main className="container mx-auto p-4 w-full sm:max-w-9xl">
+      {" "}
       <h1 className="text-3xl font-bold mb-6 text-center">
         Log4j XML Analyzer
       </h1>
-
       {logs.length === 0 ? (
         <FileUploader
           onLogsLoaded={handleLogsLoaded}
