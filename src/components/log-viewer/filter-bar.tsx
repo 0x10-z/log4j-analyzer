@@ -24,7 +24,7 @@ export function FilterBar({
   openColumnSelector,
 }: FilterBarProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-between">
+    <div className="flex flex-col sm:flex-row gap-4 justify-between shadow-xl">
       <div className="relative flex-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"

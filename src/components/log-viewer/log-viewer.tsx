@@ -147,7 +147,7 @@ export function LogViewer({ logs }: LogViewerProps) {
         openColumnSelector={() => setColumnSelectorOpen(true)}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 shadow-xl">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-sm font-medium flex items-center gap-2">
