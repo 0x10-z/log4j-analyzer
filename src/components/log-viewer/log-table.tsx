@@ -2,6 +2,8 @@ import React from "react";
 import { LogEntry } from "@/types/log-types";
 import { useHighlightText } from "@/hooks/use-highlight-text";
 import getLevelBadgeColor from "@/utils/log-utils";
+import Select from "react-select";
+import { Entry } from "@zip.js/zip.js";
 
 interface LogTableProps {
   visibleLogs: LogEntry[];
@@ -22,6 +24,7 @@ interface LogTableProps {
   visibleColumns: Record<string, boolean>;
   initialStartDate: string;
   initialEndDate: string;
+  archivedLogs?: { zipFilename: string; entries: Entry }[] | null;
 }
 
 export function LogTable({
@@ -43,28 +46,60 @@ export function LogTable({
   visibleColumns,
   initialStartDate,
   initialEndDate,
+  archivedLogs,
 }: LogTableProps) {
   const highlightText = useHighlightText(searchText);
 
   const startDate = new Date(initialStartDate).toLocaleString();
   const endDate = new Date(initialEndDate).toLocaleString();
 
+  const [selectedArchivedFile, setSelectedArchivedFile] =
+    React.useState<Entry | null>(null);
+  const allArchivedOptions = archivedLogs
+    ? archivedLogs.map((log) => ({
+        value: log,
+        label: log.zipFilename,
+      }))
+    : [];
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-lg font-semibold">
-          {showFindings ? "Findings" : "Log Records"}
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {totalFilteredCount} records found{" "}
-          {visibleLogs.length < totalFilteredCount
-            ? `(showing ${visibleLogs.length})`
-            : ""}
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          This file contains logs from <strong>{startDate}</strong> to{" "}
-          <strong>{endDate}</strong>
-        </p>
+      <div className="flex flex-row justify-between border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4">
+          <h2 className="text-lg font-semibold">
+            {showFindings ? "Findings" : "Log Records"}
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {totalFilteredCount} records found{" "}
+            {visibleLogs.length < totalFilteredCount
+              ? `(showing ${visibleLogs.length})`
+              : ""}
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            This file contains logs from <strong>{startDate}</strong> to{" "}
+            <strong>{endDate}</strong>
+          </p>
+        </div>
+        <div className="p-4">
+          <h2 className="text-lg font-semibold">
+            Archived logs ({archivedLogs ? archivedLogs.length : 0})
+          </h2>
+          <Select
+            className="w-full text-black"
+            options={allArchivedOptions}
+            onChange={(selected) => {
+              if (selected?.value) {
+                setSelectedArchivedFile(selected.value.entries);
+              } else {
+                setSelectedArchivedFile(null);
+              }
+            }}
+            placeholder="Select an archived file"
+            menuPortalTarget={document.body}
+            styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+          />
+          {selectedArchivedFile && selectedArchivedFile.toString()}
+        </div>
       </div>
       <div className="p-4">
         <div

@@ -8,12 +8,14 @@ import { useLogFiltering } from "@/hooks/use-log-filtering";
 import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
 import { getLogsMinimumAndMaximumDate } from "@/utils/log-utils";
+import { Entry } from "@zip.js/zip.js";
 
 interface LogViewerProps {
   logs: LogEntry[];
+  archivedLogs: { zipFilename: string; entries: Entry }[] | null;
 }
 
-export function LogViewer({ logs }: LogViewerProps) {
+export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
   // For findings feature
   const [findings, setFindings] = useState<LogEntry[]>([]);
   const [showFindings, setShowFindings] = useState(false);
@@ -95,7 +97,10 @@ export function LogViewer({ logs }: LogViewerProps) {
       encodeURIComponent(JSON.stringify(findings, null, 2));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "findings_export.json");
+    downloadAnchorNode.setAttribute(
+      "download",
+      `findings_export_${new Date().toISOString()}.json`
+    );
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -289,6 +294,7 @@ export function LogViewer({ logs }: LogViewerProps) {
         visibleColumns={visibleColumns}
         initialStartDate={initialStartDate}
         initialEndDate={initialEndDate}
+        archivedLogs={archivedLogs}
       />
 
       {detailModalOpen && selectedLog && (

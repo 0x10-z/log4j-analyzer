@@ -1,48 +1,21 @@
-"use client";
-
 import type React from "react";
-
 import { useState } from "react";
-import type { LogEntry } from "@/types/log-types";
-import { ZipReader, BlobReader, BlobWriter, Entry } from "@zip.js/zip.js";
 
-async function extractBVCLog(file: File): Promise<Blob | null> {
-  try {
-    const zipReader = new ZipReader(new BlobReader(file));
-    const entries: Entry[] = await zipReader.getEntries();
-
-    // Buscar el archivo log/BVC.xml dentro del ZIP
-    const entry = entries.find((e) => e.filename === "log\\BVC.xml");
-    console.log(entry);
-
-    if (!entry) {
-      console.error("Error: El archivo 'log/BVC.xml' no existe en el ZIP.");
-      await zipReader.close();
-      return null;
-    }
-
-    // Extraer el archivo como Blob
-    const blob = await entry.getData?.(new BlobWriter("text/xml"));
-
-    await zipReader.close();
-
-    if (!blob) {
-      console.error("Error: No se pudo extraer 'log/BVC.xml'.");
-      return null;
-    }
-
-    return blob;
-  } catch (error) {
-    console.error("Error al leer el archivo ZIP:", error);
-    return null;
-  }
-}
+import { LogEntry } from "@/types/log-types";
+import { extractBVCLog } from "@/utils/zip-utils";
+import { Entry } from "@zip.js/zip.js";
 
 interface FileUploaderProps {
   onLogsLoaded: (logs: LogEntry[]) => void;
+  onArchivedLogsLoaded: (
+    archivedLogs: { zipFilename: string; entries: Entry }[]
+  ) => void;
 }
 
-export function FileUploader({ onLogsLoaded }: FileUploaderProps) {
+export function FileUploader({
+  onLogsLoaded,
+  onArchivedLogsLoaded,
+}: FileUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,15 +105,17 @@ export function FileUploader({ onLogsLoaded }: FileUploaderProps) {
     };
 
     if (file.name.endsWith(".ram")) {
-      console.log("Compressed File");
-      // TODO uncompress from file variable, log\BVC.xml file if it exists
-      const logFile = await extractBVCLog(file);
-      if (logFile) {
-        reader.readAsText(logFile);
+      const result = await extractBVCLog(file);
+      if (result && result.mainLog) {
+        reader.readAsText(result.mainLog);
       } else {
         clearInterval(progressInterval);
         setError("log/BVC.xml file not found in the compressed file");
         setIsLoading(false);
+      }
+
+      if (result && result.archiveLogs) {
+        onArchivedLogsLoaded(result.archiveLogs);
       }
     } else {
       reader.readAsText(file);
