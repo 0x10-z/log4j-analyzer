@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import type { LogEntry } from "../../types/log-types";
-import getLevelBadgeColor from "../../utils/log-utils";
+import type { LogEntry } from "@/types/log-types";
+import getLevelBadgeColor from "@/utils/log-utils";
 
 interface LogDetailModalProps {
   log: LogEntry;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { LogEntry } from "../../types/log-types";
+import { LogEntry } from "@/types/log-types";
 
 interface DateTimeFilterProps {
   logs: LogEntry[];

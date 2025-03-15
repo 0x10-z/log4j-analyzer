@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
-import type { LogEntry } from "../types/log-types";
+import type { LogEntry } from "@/types/log-types";
 import { ZipReader, BlobReader, BlobWriter, Entry } from "@zip.js/zip.js";
 
 async function extractBVCLog(file: File): Promise<Blob | null> {

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FileUploader } from "./components/file-uploader";
-import { LogViewer } from "./components/log-viewer/log-viewer";
-import type { LogEntry } from "./types/log-types";
+import { FileUploader } from "@/components/file-uploader";
+import { LogViewer } from "@/components/log-viewer/log-viewer";
+import type { LogEntry } from "@/types/log-types";
 
 function App() {
   const [logs, setLogs] = useState<LogEntry[]>([]);

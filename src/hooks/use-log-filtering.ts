@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { LogEntry } from "../types/log-types";
+import { LogEntry } from "@/types/log-types";
 import { useDebounce } from "./use-debounce";
 
 export function useLogFiltering(

@@ -1,7 +1,7 @@
 import React from "react";
-import { LogEntry } from "../../types/log-types";
-import { useHighlightText } from "../../hooks/use-highlight-text";
-import getLevelBadgeColor from "../../utils/log-utils";
+import { LogEntry } from "@/types/log-types";
+import { useHighlightText } from "@/hooks/use-highlight-text";
+import getLevelBadgeColor from "@/utils/log-utils";
 
 interface LogTableProps {
   visibleLogs: LogEntry[];

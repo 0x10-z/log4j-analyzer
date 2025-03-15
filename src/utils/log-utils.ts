@@ -1,4 +1,4 @@
-import { LogEntry } from "../types/log-types";
+import { LogEntry } from "@/types/log-types";
 
 const getLevelBadgeColor = (level: string) => {
   switch (level) {

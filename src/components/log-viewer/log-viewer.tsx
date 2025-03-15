@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import type { LogEntry } from "../../types/log-types";
+import type { LogEntry } from "@/types/log-types";
 import { FilterBar } from "./filter-bar";
 import { LogTable } from "./log-table";
 import { LogDetailModal } from "./log-detail-modal";
 import { ColumnSelector } from "./column-selector";
-import { useLogFiltering } from "../../hooks/use-log-filtering";
+import { useLogFiltering } from "@/hooks/use-log-filtering";
 import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
-import { getLogsMinimumAndMaximumDate } from "../../utils/log-utils";
+import { getLogsMinimumAndMaximumDate } from "@/utils/log-utils";
 
 interface LogViewerProps {
   logs: LogEntry[];
