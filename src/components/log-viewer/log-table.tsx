@@ -292,6 +292,7 @@ export function LogTable({
               ) : (
                 visibleLogs.map((log) => (
                   <TableEntry
+                    key={log.id}
                     log={log}
                     visibleColumns={visibleColumns}
                     handleRowClick={handleRowClick}

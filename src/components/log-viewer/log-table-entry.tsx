@@ -87,7 +87,7 @@ export const TableEntry = ({
 
   return (
     <tr
-      key={`${log.id}-${log.timestamp}`}
+      key={log.id}
       className={`${
         log.id % 2 === 0 ? "bg-gray-50 dark:bg-gray-900/50" : ""
       } hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer`}
