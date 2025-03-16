@@ -102,7 +102,6 @@ const parseLogEvent = (event: Element, index: number): LogEntry => {
     properties,
   };
 };
-
 export async function parseXmlContent(
   xmlContent: string,
   chunkSize: number = 1000000,
@@ -151,7 +150,7 @@ export async function parseXmlContent(
 
       processedChunks++;
 
-      // Llama al callback de progreso (si está disponible)
+      // Actualizar el progreso (se limita a 95% para dejar espacio a otras operaciones)
       if (onProgress) {
         const progress = Math.min(
           95,
@@ -161,6 +160,8 @@ export async function parseXmlContent(
       }
 
       if (endIndex < totalSize) {
+        // Ceder el hilo para que se actualice la UI
+        await new Promise((resolve) => setTimeout(resolve, 0));
         await processNextChunk(endIndex);
       }
     };
