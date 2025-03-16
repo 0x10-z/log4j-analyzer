@@ -1,4 +1,4 @@
-import { LogEntry } from "@/types/log-types";
+import { LogEntry, SystemDetails } from "@/types/log-types";
 import { DOMParser } from "xmldom";
 
 const getLevelBadgeColor = (level: string) => {
@@ -188,4 +188,60 @@ export async function parseXmlContent(
   }
 
   return allLogs;
+}
+
+export function extractSystemDetails(logEntries: LogEntry[]): SystemDetails {
+  const softwareNameRegex =
+    /BySoftCellControlCut\s([\d.]+-\w+)\s\((Amd64|x86)\)/i;
+  const osNameRegex = /OSName:\s(.+?)(?=\n|$)/i;
+  const osVersionRegex = /OSVersion:\s([\d.]+)/i;
+  const osTypeRegex = /OSType:\s(64 Bit|32 Bit)/i;
+
+  const extractedDetails: SystemDetails = {
+    id: 0, // Inicializamos con valores por defecto
+    machineName: null,
+    version: null,
+    architecture: null,
+    osName: null,
+    osVersion: null,
+    osType: null,
+  };
+
+  logEntries.forEach((log) => {
+    if (!extractedDetails.id) {
+      extractedDetails.id = log.id; // Se asigna el primer ID encontrado.
+    }
+
+    let machineName = "";
+    Object.entries(log.properties).map(([key, value]) => {
+      if (key === "log4jmachinename") {
+        machineName = value;
+      }
+    });
+
+    const machineNameMatch = log.message.match(softwareNameRegex);
+    const osNameMatch = log.message.match(osNameRegex);
+    const osVersionMatch = log.message.match(osVersionRegex);
+    const osTypeMatch = log.message.match(osTypeRegex);
+
+    if (machineNameMatch) {
+      extractedDetails.machineName = machineName;
+      extractedDetails.version = machineNameMatch[1];
+      extractedDetails.architecture = machineNameMatch[2];
+    }
+
+    if (osNameMatch && !extractedDetails.osName) {
+      extractedDetails.osName = osNameMatch[1];
+    }
+
+    if (osVersionMatch && !extractedDetails.osVersion) {
+      extractedDetails.osVersion = osVersionMatch[1];
+    }
+
+    if (osTypeMatch && !extractedDetails.osType) {
+      extractedDetails.osType = osTypeMatch[1];
+    }
+  });
+
+  return extractedDetails;
 }
