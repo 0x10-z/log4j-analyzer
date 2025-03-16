@@ -137,24 +137,34 @@ export function FileUploader({
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl">
-      <div className="p-6">
+    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl min-h-[300px]">
+      <div className="p-6 h-full">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 h-full">
+            {/* Título de carga */}
             <h3 className="text-xl font-semibold">Processing file...</h3>
+
+            {/* Barra de progreso */}
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div
                 className="bg-gray-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
+
+            {/* Spinner animado */}
+            <div className="flex items-center justify-center mt-4">
+              <div className="w-12 h-12 border-4 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
+            {/* Texto de progreso */}
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {progress < 100 ? `${progress}% complete` : "Finalizing..."}
             </p>
           </div>
         ) : (
           <div
-            className={`border-2 border-dashed rounded-lg p-12 text-center ${
+            className={`border-2 border-dashed rounded-lg p-12 text-center h-full ${
               isDragging
                 ? "border-gray-500 bg-gray-50 dark:bg-gray-900/20"
                 : "border-gray-300 dark:border-gray-600"
