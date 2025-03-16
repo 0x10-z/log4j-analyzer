@@ -58,7 +58,7 @@ export const LogFiles = ({
 
             const logs = await parseXmlContent(
               xmlContent,
-              25000,
+              100000,
               (progress) => {
                 setTimeout(() => {
                   setLoadProgress(progress);
