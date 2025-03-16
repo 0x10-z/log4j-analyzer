@@ -79,33 +79,39 @@ export function LogTable({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <div className="flex flex-row justify-between border-b border-gray-200 dark:border-gray-700">
-        <div className="p-4">
-          <h2 className="text-lg font-semibold">
-            {showFindings ? "Findings" : "Log Records"}
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {totalFilteredCount} records found{" "}
-            {visibleLogs.length < totalFilteredCount
-              ? `(showing ${visibleLogs.length})`
-              : ""}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            This file contains logs from <strong>{startDate}</strong> to{" "}
-            <strong>{endDate}</strong>
-          </p>
-        </div>
-        <div className="p-4">
-          {archivedLogs && (
-            <ArchivedLogs
-              archivedLogs={archivedLogs}
-              allArchivedOptions={allArchivedOptions}
-              selectedArchivedFile={selectedArchivedFile}
-              setSelectedArchivedFile={setSelectedArchivedFile}
-            />
-          )}
+      <div className=" border-b border-gray-200 dark:border-gray-700 h-full">
+        <div className="flex flex-row justify-between items-center w-full  p-4">
+          {/* First Column: Log Info */}
+          <div className="p-4 text-center">
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              {showFindings ? "Findings" : "Log Records"}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {totalFilteredCount} records found{" "}
+              {visibleLogs.length < totalFilteredCount
+                ? `(showing ${visibleLogs.length})`
+                : ""}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              This file contains logs from <strong>{startDate}</strong> to{" "}
+              <strong>{endDate}</strong>.
+            </p>
+          </div>
+
+          {/* Second Column: Archived Logs */}
+          <div className="p-4">
+            {archivedLogs && (
+              <ArchivedLogs
+                archivedLogs={archivedLogs}
+                allArchivedOptions={allArchivedOptions}
+                selectedArchivedFile={selectedArchivedFile}
+                setSelectedArchivedFile={setSelectedArchivedFile}
+              />
+            )}
+          </div>
         </div>
       </div>
+
       <div className="p-4">
         <div
           ref={tableRef}

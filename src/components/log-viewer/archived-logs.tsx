@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { BlobWriter, Entry } from "@zip.js/zip.js";
 import {
@@ -28,65 +28,77 @@ export const ArchivedLogs = ({
   const [endDate, setEndDate] = useState<string>("");
   const [loadProgress, setLoadProgress] = useState(0);
 
-  const loadFile = async () => {
-    if (!selectedArchivedFile) return;
+  useEffect(() => {
+    // Trigger file loading whenever `selectedArchivedFile` changes
+    const loadFile = async () => {
+      if (!selectedArchivedFile) return;
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      setLoadProgress(0);
+      try {
+        setIsLoading(true);
+        setError(null);
+        setLoadProgress(0);
 
-      const blob = await selectedArchivedFile.getData?.(
-        new BlobWriter("text/xml")
-      );
+        const blob = await selectedArchivedFile.getData?.(
+          new BlobWriter("text/xml")
+        );
 
-      if (!blob) {
-        throw new Error("Failed to retrieve the file data.");
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = async (e) => {
-        try {
-          const xmlContent = e.target?.result as string;
-
-          const logs = await parseXmlContent(xmlContent, 100000, (progress) => {
-            setTimeout(() => {
-              setLoadProgress(progress);
-            }, 0);
-          });
-
-          if (logs.length > 0) {
-            const { start, end } = getLogsMinimumAndMaximumDate(logs);
-
-            setStartDate(new Date(start).toLocaleString());
-            setEndDate(new Date(end).toLocaleString());
-          }
-        } catch (parseError) {
-          setError("Failed to parse the XML content.");
-          console.error(parseError);
-        } finally {
-          setIsLoading(false);
+        if (!blob) {
+          throw new Error("Failed to retrieve the file data.");
         }
-      };
 
-      reader.onerror = () => {
-        setError("Error reading the file.");
-        console.error("Error reading the file.");
+        const reader = new FileReader();
+
+        reader.onload = async (e) => {
+          try {
+            const xmlContent = e.target?.result as string;
+
+            const logs = await parseXmlContent(
+              xmlContent,
+              100000,
+              (progress) => {
+                setTimeout(() => {
+                  setLoadProgress(progress);
+                }, 0);
+              }
+            );
+
+            if (logs.length > 0) {
+              const { start, end } = getLogsMinimumAndMaximumDate(logs);
+
+              setStartDate(new Date(start).toLocaleString());
+              setEndDate(new Date(end).toLocaleString());
+            }
+          } catch (parseError) {
+            setError("Failed to parse the XML content.");
+            console.error(parseError);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+
+        reader.onerror = () => {
+          setError("Error reading the file.");
+          console.error("Error reading the file.");
+          setIsLoading(false);
+        };
+
+        reader.readAsText(blob);
+      } catch (err) {
+        setError("An error occurred while loading the file.");
+        console.error(err);
         setIsLoading(false);
-      };
+      }
+    };
 
-      reader.readAsText(blob);
-    } catch (err) {
-      setError("An error occurred while loading the file.");
-      console.error(err);
-      setIsLoading(false);
+    if (selectedArchivedFile) {
+      loadFile();
     }
-  };
+  }, [selectedArchivedFile]);
 
   return (
-    <div className="archived-logs">
-      <h2 className="text-lg font-semibold mb-4">
+    <div className="archived-logs max-w-2xl min-w-[400px] mx-auto">
+      {" "}
+      <h2 className="text-lg font-semibold mb-4 text-center">
         Archived Logs ({archivedLogs ? archivedLogs.length : 0})
       </h2>
       <Select
@@ -95,7 +107,6 @@ export const ArchivedLogs = ({
         onChange={(selected) => {
           if (selected?.value) {
             setSelectedArchivedFile(selected.value.entries);
-            loadFile();
           } else {
             setSelectedArchivedFile(null);
           }
@@ -103,14 +114,17 @@ export const ArchivedLogs = ({
         placeholder="Select an archived file"
         menuPortalTarget={document.body}
         styles={{
+          container: (base) => ({
+            ...base,
+            width: "100%",
+          }),
           menu: (base) => ({ ...base, zIndex: 9999 }),
         }}
       />
-
-      {/* Estado de carga */}
+      {/* Loading State */}
       {isLoading ? (
         <div className="mt-4">
-          <p className="text-gray-800 text-sm mb-2">
+          <p className="text-gray-800 text-sm mb-2 text-center">
             ({loadProgress}%) Loading files, please wait...
           </p>
           <div className="relative w-full h-6 bg-gray-200 rounded-full overflow-hidden shadow">
@@ -123,15 +137,16 @@ export const ArchivedLogs = ({
       ) : (
         startDate &&
         endDate && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-            This file contains logs from<strong>{startDate}</strong> to{" "}
-            <strong>{endDate}</strong>.
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
+            Logs from <strong>{startDate}</strong> to <strong>{endDate}</strong>
+            .
           </p>
         )
       )}
-
-      {/* Muestra errores */}
-      {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
+      {/* Error State */}
+      {error && (
+        <p className="mt-4 text-red-500 text-sm text-center">{error}</p>
+      )}
     </div>
   );
 };
