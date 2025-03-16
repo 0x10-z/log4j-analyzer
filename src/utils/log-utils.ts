@@ -60,6 +60,11 @@ const parseLogEvent = (event: Element, index: number): LogEntry => {
   const message =
     messageElements.length > 0 ? messageElements[0].textContent : "";
 
+  // Get throwable (if exists)
+  const throwableElements = event.getElementsByTagName("log4j:throwable");
+  const throwable =
+    throwableElements.length > 0 ? throwableElements[0].textContent : "";
+
   // Get location info
   const locationElements = event.getElementsByTagName("log4j:locationInfo");
   const className =
@@ -97,6 +102,7 @@ const parseLogEvent = (event: Element, index: number): LogEntry => {
     logger: logger || "",
     thread: thread || "",
     message: message || "",
+    throwable: throwable || "", // Añadido para incluir información del throwable
     className: className || "",
     method: method || "",
     properties,
@@ -109,73 +115,73 @@ export async function parseXmlContent(
 ): Promise<LogEntry[]> {
   const totalSize = xmlContent.length;
   const allLogs: LogEntry[] = [];
+  let processedChunks = 0;
+  let remainingFragment = ""; // Fragmento incompleto de eventos anteriores
+  const totalChunks = Math.ceil(totalSize / chunkSize);
 
-  if (totalSize > chunkSize * 5) {
-    let processedChunks = 0;
-    const totalChunks = Math.ceil(totalSize / chunkSize);
+  const processNextChunk = async (startIndex: number): Promise<void> => {
+    const endIndex = Math.min(startIndex + chunkSize, totalSize);
+    let chunk = xmlContent.substring(startIndex, endIndex);
 
-    const processNextChunk = async (startIndex: number): Promise<void> => {
-      const endIndex = Math.min(startIndex + chunkSize, totalSize);
-      const chunk = xmlContent.substring(startIndex, endIndex);
+    // Combinar fragmento sobrante con el chunk actual
+    chunk = remainingFragment + chunk;
+    remainingFragment = "";
 
-      // Manejo del primer y último chunk
-      let processableChunk = chunk;
-      if (startIndex > 0) {
-        const firstEventIndex = chunk.indexOf("<log4j:event");
-        if (firstEventIndex > 0) {
-          processableChunk = chunk.substring(firstEventIndex);
-        }
-      }
-      if (endIndex < totalSize) {
-        const lastEventEndIndex =
-          processableChunk.lastIndexOf("</log4j:event>");
-        if (lastEventEndIndex > 0) {
-          processableChunk = processableChunk.substring(
-            0,
-            lastEventEndIndex + 14
-          );
-        }
-      }
+    // Asegurar que el chunk comienza con un evento completo
+    const firstEventIndex = chunk.indexOf("<log4j:event");
+    if (firstEventIndex > 0) {
+      remainingFragment = chunk.substring(0, firstEventIndex); // Guardar datos previos por seguridad
+      chunk = chunk.substring(firstEventIndex);
+    }
 
-      // Parsear el chunk
-      const wrappedXml = `<root>${processableChunk}</root>`;
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(wrappedXml, "text/xml");
-      const logEvents = xmlDoc.getElementsByTagName("log4j:event");
+    // Manejar el fragmento incompleto al final del chunk
+    const lastEventEndIndex = chunk.lastIndexOf("</log4j:event>");
+    if (lastEventEndIndex > -1 && lastEventEndIndex + 14 < chunk.length) {
+      remainingFragment = chunk.substring(lastEventEndIndex + 14); // Guardar fragmento incompleto
+      chunk = chunk.substring(0, lastEventEndIndex + 14); // Ajustar chunk para procesar eventos completos
+    }
 
-      for (let i = 0; i < logEvents.length; i++) {
-        const log = parseLogEvent(logEvents[i], allLogs.length);
-        allLogs.push(log);
-      }
-
-      processedChunks++;
-
-      // Actualizar el progreso (se limita a 95% para dejar espacio a otras operaciones)
-      if (onProgress) {
-        const progress = Math.min(
-          95,
-          Math.round((processedChunks / totalChunks) * 100)
-        );
-        onProgress(progress);
-      }
-
-      if (endIndex < totalSize) {
-        // Ceder el hilo para que se actualice la UI
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        await processNextChunk(endIndex);
-      }
-    };
-
-    // Iniciar el procesamiento por chunks
-    await processNextChunk(0);
-  } else {
-    const wrappedXml = `<root>${xmlContent}</root>`;
+    // Parsear el chunk ajustado
+    const wrappedXml = `<root>${chunk}</root>`;
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(wrappedXml, "text/xml");
     const logEvents = xmlDoc.getElementsByTagName("log4j:event");
 
     for (let i = 0; i < logEvents.length; i++) {
-      const log = parseLogEvent(logEvents[i], i);
+      const log = parseLogEvent(logEvents[i], allLogs.length);
+      allLogs.push(log);
+    }
+
+    processedChunks++;
+
+    // Actualizar el progreso
+    if (onProgress) {
+      const progress = Math.min(
+        95,
+        Math.round((processedChunks / totalChunks) * 100)
+      );
+      onProgress(progress);
+    }
+
+    if (endIndex < totalSize) {
+      // Ceder control a la UI
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await processNextChunk(endIndex);
+    }
+  };
+
+  // Procesar los chunks del archivo
+  await processNextChunk(0);
+
+  // Procesar cualquier fragmento restante (si existe)
+  if (remainingFragment.trim().length > 0) {
+    const wrappedXml = `<root>${remainingFragment}</root>`;
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(wrappedXml, "text/xml");
+    const logEvents = xmlDoc.getElementsByTagName("log4j:event");
+
+    for (let i = 0; i < logEvents.length; i++) {
+      const log = parseLogEvent(logEvents[i], allLogs.length);
       allLogs.push(log);
     }
   }

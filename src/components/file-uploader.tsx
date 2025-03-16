@@ -7,14 +7,14 @@ import { parseXmlContent } from "@/utils/log-utils";
 
 interface FileUploaderProps {
   onLogsLoaded: (logs: LogEntry[]) => void;
-  onArchivedLogsLoaded: (
-    archivedLogs: { zipFilename: string; entries: Entry }[]
+  onLogFilesLoaded: (
+    logFiles: { zipFilename: string; entries: Entry }[]
   ) => void;
 }
 
 export function FileUploader({
   onLogsLoaded,
-  onArchivedLogsLoaded,
+  onLogFilesLoaded: onLogFilesLoaded,
 }: FileUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,8 +112,8 @@ export function FileUploader({
         setIsLoading(false);
       }
 
-      if (result && result.archiveLogs) {
-        onArchivedLogsLoaded(result.archiveLogs);
+      if (result && result.allEntries) {
+        onLogFilesLoaded(result.allEntries);
       }
     } else {
       reader.readAsText(file);

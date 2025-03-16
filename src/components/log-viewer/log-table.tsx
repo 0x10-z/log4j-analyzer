@@ -3,9 +3,10 @@ import { LogEntry } from "@/types/log-types";
 import { Entry } from "@zip.js/zip.js";
 import { TableEntry } from "./log-table-entry";
 import { ContextMenu } from "../context-menu";
-import { ArchivedLogs } from "./archived-logs";
+import { LogFiles } from "./all-log-files";
 
 interface LogTableProps {
+  onLogsLoaded: (logs: LogEntry[]) => void;
   visibleLogs: LogEntry[];
   isSearching: boolean;
   isLoadingMore: boolean;
@@ -24,11 +25,12 @@ interface LogTableProps {
   visibleColumns: Record<string, boolean>;
   initialStartDate: string;
   initialEndDate: string;
-  archivedLogs?: { zipFilename: string; entries: Entry }[] | null;
+  logFiles?: { zipFilename: string; entries: Entry }[] | null;
   onSetTimestamp: (timestamp: number) => void;
 }
 
 export function LogTable({
+  onLogsLoaded,
   visibleLogs,
   isSearching,
   isLoadingMore,
@@ -47,7 +49,7 @@ export function LogTable({
   visibleColumns,
   initialStartDate,
   initialEndDate,
-  archivedLogs,
+  logFiles: logFiles,
   onSetTimestamp,
 }: LogTableProps) {
   const startDate = new Date(initialStartDate).toLocaleString();
@@ -55,8 +57,8 @@ export function LogTable({
 
   const [selectedArchivedFile, setSelectedArchivedFile] =
     React.useState<Entry | null>(null);
-  const allArchivedOptions = archivedLogs
-    ? archivedLogs.map((log) => ({
+  const logFilesOptions = logFiles
+    ? logFiles.map((log) => ({
         value: log,
         label: log.zipFilename,
       }))
@@ -92,6 +94,7 @@ export function LogTable({
                 ? `(showing ${visibleLogs.length})`
                 : ""}
             </p>
+            <p>64379</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               This file contains logs from <strong>{startDate}</strong> to{" "}
               <strong>{endDate}</strong>.
@@ -100,10 +103,11 @@ export function LogTable({
 
           {/* Second Column: Archived Logs */}
           <div className="p-4">
-            {archivedLogs && (
-              <ArchivedLogs
-                archivedLogs={archivedLogs}
-                allArchivedOptions={allArchivedOptions}
+            {logFiles && (
+              <LogFiles
+                onLogsLoaded={onLogsLoaded}
+                logFiles={logFiles}
+                logFilesOptions={logFilesOptions}
                 selectedArchivedFile={selectedArchivedFile}
                 setSelectedArchivedFile={setSelectedArchivedFile}
               />

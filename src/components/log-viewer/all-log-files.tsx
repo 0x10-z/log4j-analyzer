@@ -5,10 +5,13 @@ import {
   getLogsMinimumAndMaximumDate,
   parseXmlContent,
 } from "@/utils/log-utils";
+import { LogEntry } from "@/types/log-types";
 
-interface ArchivedLogsProps {
-  archivedLogs: { zipFilename: string; entries: Entry }[] | null;
-  allArchivedOptions: {
+interface LogFilesProps {
+  onLogsLoaded: (logs: LogEntry[]) => void;
+
+  logFiles: { zipFilename: string; entries: Entry }[] | null;
+  logFilesOptions: {
     value: { zipFilename: string; entries: Entry };
     label: string;
   }[];
@@ -16,12 +19,13 @@ interface ArchivedLogsProps {
   selectedArchivedFile: Entry | null;
 }
 
-export const ArchivedLogs = ({
-  archivedLogs,
-  allArchivedOptions,
+export const LogFiles = ({
+  onLogsLoaded,
+  logFiles: logFiles,
+  logFilesOptions: allArchivedOptions,
   setSelectedArchivedFile,
   selectedArchivedFile,
-}: ArchivedLogsProps) => {
+}: LogFilesProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
@@ -54,7 +58,7 @@ export const ArchivedLogs = ({
 
             const logs = await parseXmlContent(
               xmlContent,
-              100000,
+              25000,
               (progress) => {
                 setTimeout(() => {
                   setLoadProgress(progress);
@@ -64,7 +68,7 @@ export const ArchivedLogs = ({
 
             if (logs.length > 0) {
               const { start, end } = getLogsMinimumAndMaximumDate(logs);
-
+              onLogsLoaded(logs);
               setStartDate(new Date(start).toLocaleString());
               setEndDate(new Date(end).toLocaleString());
             }
@@ -99,7 +103,7 @@ export const ArchivedLogs = ({
     <div className="archived-logs max-w-2xl min-w-[400px] mx-auto">
       {" "}
       <h2 className="text-lg font-semibold mb-4 text-center">
-        Archived Logs ({archivedLogs ? archivedLogs.length : 0})
+        All Logs files ({logFiles ? logFiles.length : 0})
       </h2>
       <Select
         className="w-full text-black mb-4"

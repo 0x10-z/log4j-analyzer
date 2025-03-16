@@ -124,6 +124,16 @@ export function LogDetailModal({
               {log.message}
             </pre>
           </div>
+          {log.throwable !== "" && (
+            <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                Exception:
+              </h3>
+              <pre className="whitespace-pre-wrap font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
+                {log.throwable}
+              </pre>
+            </div>
+          )}
 
           {Object.keys(log.properties).length > 0 && (
             <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">

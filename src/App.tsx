@@ -7,7 +7,7 @@ import { Log4JExplanation } from "./components/log4j-explanation";
 
 function App() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [archivedLogs, setArchivedLogs] = useState<
+  const [logFiles, setLogFiles] = useState<
     { zipFilename: string; entries: Entry }[] | null
   >(null);
 
@@ -15,10 +15,10 @@ function App() {
     setLogs(parsedLogs);
   };
 
-  const handleArchivedLogsLoaded = (
-    archivedLogs: { zipFilename: string; entries: Entry }[]
+  const handleLogFilesLoaded = (
+    logFiles: { zipFilename: string; entries: Entry }[]
   ) => {
-    setArchivedLogs(archivedLogs);
+    setLogFiles(logFiles);
   };
 
   return (
@@ -47,12 +47,16 @@ function App() {
           </a>
           <FileUploader
             onLogsLoaded={handleLogsLoaded}
-            onArchivedLogsLoaded={handleArchivedLogsLoaded}
+            onLogFilesLoaded={handleLogFilesLoaded}
           />
           <Log4JExplanation />
         </>
       ) : (
-        <LogViewer logs={logs} archivedLogs={archivedLogs} />
+        <LogViewer
+          onLogsLoaded={handleLogsLoaded}
+          logs={logs}
+          logFiles={logFiles}
+        />
       )}
     </main>
   );

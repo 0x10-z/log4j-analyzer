@@ -6,6 +6,7 @@ export interface LogEntry {
   logger: string;
   thread: string;
   message: string;
+  throwable: string;
   className: string;
   method: string;
   properties: Record<string, string>;

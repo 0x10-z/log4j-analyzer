@@ -14,11 +14,16 @@ import getLevelBadgeColor, {
 import { Entry } from "@zip.js/zip.js";
 
 interface LogViewerProps {
+  onLogsLoaded: (logs: LogEntry[]) => void;
   logs: LogEntry[];
-  archivedLogs: { zipFilename: string; entries: Entry }[] | null;
+  logFiles: { zipFilename: string; entries: Entry }[] | null;
 }
 
-export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
+export function LogViewer({
+  onLogsLoaded,
+  logs,
+  logFiles: logFiles,
+}: LogViewerProps) {
   // For findings feature
   const [findings, setFindings] = useState<LogEntry[]>([]);
   const [showFindings, setShowFindings] = useState(false);
@@ -243,6 +248,23 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
     setIsDateFilterActive(true);
   };
 
+  const handleDownloadLogs = () => {
+    if (!logs) {
+      console.error("No logs available to download.");
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(logs, null, 2)], {
+      type: "application/json",
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "allLogs.json";
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
   return (
     <div className="space-y-4">
       <FilterBar
@@ -256,7 +278,7 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
         exportData={() => (showFindings ? exportFindings() : null)}
         openColumnSelector={() => setColumnSelectorOpen(true)}
       />
-
+      <button onClick={handleDownloadLogs}>Descargar Logs</button>
       <div className="grid grid-cols-12 gap-3 shadow-xl">
         {/* Level ocupa menos espacio */}
         <div className="col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
@@ -371,6 +393,7 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
         />
       </div>
       <LogTable
+        onLogsLoaded={onLogsLoaded}
         visibleLogs={visibleLogs}
         isSearching={isSearching}
         isLoadingMore={isLoadingMore}
@@ -389,7 +412,7 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
         visibleColumns={visibleColumns}
         initialStartDate={initialStartDate}
         initialEndDate={initialEndDate}
-        archivedLogs={archivedLogs}
+        logFiles={logFiles}
         onSetTimestamp={handleExternalSetTimestamp}
       />
 

@@ -45,7 +45,7 @@ export async function extractArchivedLogsFromZipFile(
 
 export async function extractBVCLog(file: File): Promise<{
   mainLog: Blob;
-  archiveLogs: {
+  allEntries: {
     zipFilename: string;
     entries: Entry;
   }[];
@@ -66,11 +66,14 @@ export async function extractBVCLog(file: File): Promise<{
       e.filename.startsWith("log\\Archives\\")
     );
 
-    let fileOfArchivedEntries;
+    const allEntries: { zipFilename: string; entries: Entry }[] = [];
     if (archiveEntries.length > 0) {
-      fileOfArchivedEntries = await extractArchivedLogsFromZipFile(
+      const tempFileOfArchivedEntries = await extractArchivedLogsFromZipFile(
         archiveEntries
       );
+      if (tempFileOfArchivedEntries) {
+        allEntries.push(...tempFileOfArchivedEntries);
+      }
     }
 
     const blob = await entry.getData?.(new BlobWriter("text/xml"));
@@ -80,9 +83,14 @@ export async function extractBVCLog(file: File): Promise<{
       return null;
     }
 
+    allEntries?.unshift({
+      zipFilename: entry.filename,
+      entries: entry,
+    });
+
     return {
       mainLog: blob,
-      archiveLogs: fileOfArchivedEntries || [],
+      allEntries: allEntries || [],
     };
   } catch (error) {
     console.error("Error reading ZIP file:", error);
