@@ -94,7 +94,6 @@ export function LogTable({
                 ? `(showing ${visibleLogs.length})`
                 : ""}
             </p>
-            <p>64379</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               This file contains logs from <strong>{startDate}</strong> to{" "}
               <strong>{endDate}</strong>.

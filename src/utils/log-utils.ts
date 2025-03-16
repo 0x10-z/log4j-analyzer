@@ -1,4 +1,5 @@
 import { LogEntry } from "@/types/log-types";
+import { DOMParser } from "xmldom";
 
 const getLevelBadgeColor = (level: string) => {
   switch (level) {
