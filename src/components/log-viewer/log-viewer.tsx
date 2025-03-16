@@ -221,7 +221,7 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
       setEndDateTime(end);
     }
   }, [logs, setStartDateTime, setEndDateTime]);
-  const handleExternalSetTimestamp = (timestamp: string) => {
+  const handleExternalSetTimestamp = (timestamp: number) => {
     const deltaTime = 2500; // 2.5 seconds * 2 of interval time.
     const date = new Date(timestamp);
 

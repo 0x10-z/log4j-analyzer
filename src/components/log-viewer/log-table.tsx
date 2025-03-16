@@ -25,7 +25,7 @@ interface LogTableProps {
   initialStartDate: string;
   initialEndDate: string;
   archivedLogs?: { zipFilename: string; entries: Entry }[] | null;
-  onSetTimestamp: (timestamp: string) => void;
+  onSetTimestamp: (timestamp: number) => void;
 }
 
 export function LogTable({
