@@ -1,6 +1,6 @@
 export function Log4JExplanation() {
   return (
-    <section className="bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mt-6">
+    <section className="bg-gradient-to-l from-orange-50 to-orange-100 p-8 rounded-lg shadow-lg mt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Primera Columna: Texto Explicativo */}
         <div>
@@ -33,7 +33,7 @@ export function Log4JExplanation() {
           </h3>
           <table className="table-auto w-full bg-white shadow-md rounded-lg">
             <thead>
-              <tr className="bg-orange-400 text-white">
+              <tr className="bg-gray-800 text-white">
                 <th className="px-4 py-2">Feature</th>
                 <th className="px-4 py-2">This Tool</th>
                 <th className="px-4 py-2">Log4View (Paid)</th>
