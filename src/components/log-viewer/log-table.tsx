@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { LogEntry } from "@/types/log-types";
-import Select from "react-select";
 import { Entry } from "@zip.js/zip.js";
 import { TableEntry } from "./log-table-entry";
 import { ContextMenu } from "../context-menu";
+import { ArchivedLogs } from "./archived-logs";
 
 interface LogTableProps {
   visibleLogs: LogEntry[];
@@ -96,24 +96,14 @@ export function LogTable({
           </p>
         </div>
         <div className="p-4">
-          <h2 className="text-lg font-semibold">
-            Archived logs ({archivedLogs ? archivedLogs.length : 0})
-          </h2>
-          <Select
-            className="w-full text-black"
-            options={allArchivedOptions}
-            onChange={(selected) => {
-              if (selected?.value) {
-                setSelectedArchivedFile(selected.value.entries);
-              } else {
-                setSelectedArchivedFile(null);
-              }
-            }}
-            placeholder="Select an archived file"
-            menuPortalTarget={document.body}
-            styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
-          />
-          {selectedArchivedFile && selectedArchivedFile.toString()}
+          {archivedLogs && (
+            <ArchivedLogs
+              archivedLogs={archivedLogs}
+              allArchivedOptions={allArchivedOptions}
+              selectedArchivedFile={selectedArchivedFile}
+              setSelectedArchivedFile={setSelectedArchivedFile}
+            />
+          )}
         </div>
       </div>
       <div className="p-4">
