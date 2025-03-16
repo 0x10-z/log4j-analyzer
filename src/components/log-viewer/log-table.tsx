@@ -25,6 +25,7 @@ interface LogTableProps {
   initialStartDate: string;
   initialEndDate: string;
   archivedLogs?: { zipFilename: string; entries: Entry }[] | null;
+  onSetTimestamp: (timestamp: string) => void;
 }
 
 export function LogTable({
@@ -47,6 +48,7 @@ export function LogTable({
   initialStartDate,
   initialEndDate,
   archivedLogs,
+  onSetTimestamp,
 }: LogTableProps) {
   const startDate = new Date(initialStartDate).toLocaleString();
   const endDate = new Date(initialEndDate).toLocaleString();
@@ -300,7 +302,9 @@ export function LogTable({
                     removeFromFindings={removeFromFindings}
                     isInFindings={isInFindings}
                     searchText={searchText}
-                    handleSetTimestamp={(a) => console.log(a)}
+                    handleSetTimestamp={(timestamp) =>
+                      onSetTimestamp(timestamp)
+                    }
                     openContextMenu={(e, options) =>
                       openContextMenu({ x: e.clientX, y: e.clientY }, options)
                     }

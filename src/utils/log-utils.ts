@@ -19,10 +19,10 @@ const getLevelBadgeColor = (level: string) => {
 
 export default getLevelBadgeColor;
 
-const parseDate = (date: Date): string => {
+export const parseDate = (date: Date): string => {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
     .toISOString()
-    .slice(0, 16);
+    .slice(0, 19);
 };
 
 export const getLogsMinimumAndMaximumDate = (logs: LogEntry[]) => {

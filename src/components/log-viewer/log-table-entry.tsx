@@ -14,7 +14,7 @@ interface LogTableEntryProps {
   addToFindings: (log: LogEntry) => void;
   removeFromFindings: (logId: number) => void;
   searchText: string;
-  handleSetTimestamp: (timestamp: string) => void;
+  handleSetTimestamp: (timestamp: number) => void;
   openContextMenu: (
     e: React.MouseEvent,
     options: { label: React.ReactNode; action: () => void }[]
@@ -55,8 +55,7 @@ export const TableEntry = ({
           </>
         ),
         action: () => {
-          console.log("Setting timestamp:", log.formattedTimestamp);
-          handleSetTimestamp(log.formattedTimestamp);
+          handleSetTimestamp(log.timestamp);
         },
       },
       isInFindings(log.id)

@@ -9,6 +9,7 @@ import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
 import getLevelBadgeColor, {
   getLogsMinimumAndMaximumDate,
+  parseDate,
 } from "@/utils/log-utils";
 import { Entry } from "@zip.js/zip.js";
 
@@ -213,7 +214,6 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
   useEffect(() => {
     if (logs.length > 0) {
       const { start, end } = getLogsMinimumAndMaximumDate(logs);
-
       setInitialStartDate(start);
       setInitialEndDate(end);
 
@@ -221,6 +221,27 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
       setEndDateTime(end);
     }
   }, [logs, setStartDateTime, setEndDateTime]);
+  const handleExternalSetTimestamp = (timestamp: string) => {
+    const deltaTime = 2500; // 2.5 seconds * 2 of interval time.
+    const date = new Date(timestamp);
+
+    // Set the start to deltaTime second before the timestamp
+    const start = new Date(date.getTime() - deltaTime);
+
+    // Set the end to deltaTime second after the timestamp
+    const end = new Date(date.getTime() + deltaTime);
+
+    //console.log(`Timestamp: ${timestamp}`);
+    //console.log(`Start: ${start.toISOString()}`);
+    //console.log(`End: ${end.toISOString()}`);
+
+    // Update the start and end times in state
+    setStartDateTime(parseDate(start)); // Ensure parseDate formats the date correctly with seconds
+    setEndDateTime(parseDate(end)); // Ensure parseDate formats the date correctly with seconds
+
+    // Activate the filter
+    setIsDateFilterActive(true);
+  };
 
   return (
     <div className="space-y-4">
@@ -369,6 +390,7 @@ export function LogViewer({ logs, archivedLogs }: LogViewerProps) {
         initialStartDate={initialStartDate}
         initialEndDate={initialEndDate}
         archivedLogs={archivedLogs}
+        onSetTimestamp={handleExternalSetTimestamp}
       />
 
       {detailModalOpen && selectedLog && (
