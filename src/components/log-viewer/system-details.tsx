@@ -1,68 +1,61 @@
-import { SystemDetails } from "@/types/log-types";
-import React, { useState } from "react";
+import React from "react";
 
 interface SystemDetailsProps {
-  details: SystemDetails;
+  details: {
+    machineName?: string;
+    version?: string;
+    architecture?: string;
+    osName?: string;
+    osVersion?: string;
+    osType?: string;
+  };
 }
 
-const SystemDetailsCard: React.FC<SystemDetailsProps> = ({ details }) => {
-  const [isOpen, setIsOpen] = useState(false); // Estado para el colapsable
+const SystemDetails: React.FC<SystemDetailsProps> = ({ details }) => {
+  const { machineName, version, architecture, osName, osVersion, osType } =
+    details || {};
 
-  const toggleCollapse = () => {
-    setIsOpen(!isOpen);
-  };
+  const hasDetails =
+    machineName || version || architecture || osName || osVersion || osType;
+
+  if (!hasDetails) return null; // Don't render if no details
 
   return (
-    <div className="bg-white shadow-md rounded-lg border border-gray-200">
-      {/* Cabecera con título y botón para expandir/colapsar */}
-      <div
-        className="flex justify-between items-center p-4 cursor-pointer"
-        onClick={toggleCollapse}
-      >
-        <h2 className="text-lg font-bold text-gray-800">System Details</h2>
-        <button
-          className="text-gray-600 bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 focus:outline-none"
-          aria-expanded={isOpen}
-        >
-          {isOpen ? "Hide" : "Show"}
-        </button>
+    <div className="bg-white shadow-md rounded-lg border border-gray-200 p-4">
+      <div className="flex flex-wrap gap-2">
+        {machineName && (
+          <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">
+            Machine: {machineName}
+          </span>
+        )}
+        {version && (
+          <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+            Version: {version}
+          </span>
+        )}
+        {architecture && (
+          <span className="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">
+            Arch: {architecture}
+          </span>
+        )}
+        {osName && (
+          <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
+            OS: {osName}
+          </span>
+        )}
+        {osVersion && (
+          <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">
+            OS Ver: {osVersion}
+          </span>
+        )}
+        {osType && (
+          <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/10 ring-inset">
+            OS Type: {osType}
+          </span>
+        )}
       </div>
-
-      {/* Contenido colapsable */}
-      {isOpen && (
-        <div className="p-4 space-y-2 border-t border-gray-200">
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">Machine Name:</span>
-            <span className="text-gray-800">
-              {details.machineName || "N/A"}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">Version:</span>
-            <span className="text-gray-800">{details.version || "N/A"}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">Architecture:</span>
-            <span className="text-gray-800">
-              {details.architecture || "N/A"}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">OS Name:</span>
-            <span className="text-gray-800">{details.osName || "N/A"}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">OS Version:</span>
-            <span className="text-gray-800">{details.osVersion || "N/A"}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-600">OS Type:</span>
-            <span className="text-gray-800">{details.osType || "N/A"}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default SystemDetailsCard;
+export default SystemDetails;
