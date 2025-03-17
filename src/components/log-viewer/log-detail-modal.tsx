@@ -42,16 +42,14 @@ export function LogDetailModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
-      >
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        className="bg-white  rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+        <div className="p-4 border-b border-gray-200  flex justify-between items-center">
           <div className="flex items-center gap-4 p-2">
             <div className="flex flex-col items-center text-center space-y-2">
               <span
                 className={`px-3 py-1 text-xs font-medium rounded-full ${getLevelBadgeColor(
                   log.level
-                )}`}
-              >
+                )}`}>
                 {log.level}
               </span>
               <p className="text-xs text-gray-500">Thread: {log.thread}</p>
@@ -68,15 +66,13 @@ export function LogDetailModal({
 
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-          >
+            className="text-gray-500 hover:text-gray-700  ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -90,16 +86,16 @@ export function LogDetailModal({
         <div className="p-4 overflow-auto flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="space-y-4">
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              <div className="bg-gray-50  p-4 rounded-md">
+                <h3 className="text-sm font-medium text-gray-500  mb-2">
                   Class
                 </h3>
                 <p className="font-mono text-xs break-all">{log.className}</p>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              <div className="bg-gray-50  p-4 rounded-md">
+                <h3 className="text-sm font-medium text-gray-500  mb-2">
                   Method
                 </h3>
                 <p className="font-mono text-xs  overflow-auto">{log.method}</p>
@@ -107,58 +103,54 @@ export function LogDetailModal({
             </div>
           </div>
 
-          <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-              Logger
-            </h3>
-            <p className="font-mono text-xs bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
+          <div className="mt-4 bg-gray-50  p-4 rounded-md">
+            <h3 className="text-sm font-medium text-gray-500  mb-2">Logger</h3>
+            <p className="font-mono text-xs bg-white  p-3 rounded border border-gray-200  max-h-[200px] overflow-auto">
               {log.logger}
             </p>
           </div>
 
-          <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-              Message
-            </h3>
-            <pre className="whitespace-pre-wrap font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
+          <div className="mt-4 bg-gray-50  p-4 rounded-md">
+            <h3 className="text-sm font-medium text-gray-500  mb-2">Message</h3>
+            <pre className="whitespace-pre-wrap font-mono text-sm bg-white  p-3 rounded border border-gray-200  max-h-[200px] overflow-auto">
               {log.message}
             </pre>
           </div>
           {log.throwable !== "" && (
-            <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <div className="mt-4 bg-gray-50  p-4 rounded-md">
+              <h3 className="text-sm font-medium text-gray-500  mb-2">
                 Exception:
               </h3>
-              <pre className="whitespace-pre-wrap font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
+              <pre className="whitespace-pre-wrap font-mono text-sm bg-white  p-3 rounded border border-gray-200  max-h-[200px] overflow-auto">
                 {log.throwable}
               </pre>
             </div>
           )}
 
           {Object.keys(log.properties).length > 0 && (
-            <div className="mt-4 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-md">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <div className="mt-4 bg-gray-50  p-4 rounded-md">
+              <h3 className="text-sm font-medium text-gray-500  mb-2">
                 Properties
               </h3>
-              <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 max-h-[200px] overflow-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="bg-white  p-3 rounded border border-gray-200  max-h-[200px] overflow-auto">
+                <table className="min-w-full divide-y divide-gray-200 ">
                   <thead>
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500  uppercase tracking-wider">
                         Name
                       </th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500  uppercase tracking-wider">
                         Value
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="divide-y divide-gray-200 ">
                     {Object.entries(log.properties).map(([key, value]) => (
                       <tr key={key}>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
+                        <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 ">
                           {key}
                         </td>
-                        <td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 break-all">
+                        <td className="px-3 py-2 text-sm text-gray-500  break-all">
                           {value}
                         </td>
                       </tr>
@@ -170,20 +162,18 @@ export function LogDetailModal({
           )}
         </div>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+        <div className="p-4 border-t border-gray-200  flex justify-between">
           <div>
             {!isInFindings ? (
               <button
                 onClick={addToFindings}
-                className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors flex items-center gap-2"
-              >
+                className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                  stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -196,15 +186,13 @@ export function LogDetailModal({
             ) : (
               <button
                 onClick={removeFromFindings}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-2"
-              >
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                  stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -218,8 +206,7 @@ export function LogDetailModal({
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
+            className="px-4 py-2 border border-gray-300  rounded-md hover:bg-gray-100 ">
             Close
           </button>
         </div>

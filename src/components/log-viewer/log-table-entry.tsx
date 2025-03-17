@@ -88,10 +88,9 @@ export const TableEntry = ({
     <tr
       key={log.id}
       className={`${
-        log.id % 2 === 0 ? "bg-gray-50 dark:bg-gray-900/50" : ""
-      } hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer`}
-      onClick={handleContextMenu}
-    >
+        log.id % 2 === 0 ? "bg-gray-50 " : ""
+      } hover:bg-blue-50  cursor-pointer`}
+      onClick={handleContextMenu}>
       {visibleColumns.actions && (
         <td className="px-4 py-2 whitespace-nowrap text-center">
           {isInFindings(log.id) ? (
@@ -100,16 +99,14 @@ export const TableEntry = ({
                 e.stopPropagation();
                 removeFromFindings(log.id);
               }}
-              className="inline-flex items-center justify-center p-1 text-red-600 bg-red-100 rounded-full hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
-              title="Remove from findings"
-            >
+              className="inline-flex items-center justify-center p-1 text-red-600 bg-red-100 rounded-full hover:bg-red-200   "
+              title="Remove from findings">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -124,16 +121,14 @@ export const TableEntry = ({
                 e.stopPropagation();
                 addToFindings(log);
               }}
-              className="inline-flex items-center justify-center p-1 text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
-              title="Add to findings"
-            >
+              className="inline-flex items-center justify-center p-1 text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200   "
+              title="Add to findings">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -147,7 +142,7 @@ export const TableEntry = ({
       )}
 
       {visibleColumns.timestamp && (
-        <td className="px-4 py-2 whitespace-nowrap font-mono text-xs text-gray-900 dark:text-gray-300">
+        <td className="px-4 py-2 whitespace-nowrap font-mono text-xs text-gray-900 ">
           {highlightText(log.formattedTimestamp)}
         </td>
       )}
@@ -157,8 +152,7 @@ export const TableEntry = ({
           <span
             className={`px-2 py-1 text-xs rounded-full ${getLevelBadgeColor(
               log.level
-            )}`}
-          >
+            )}`}>
             {log.level}
           </span>
         </td>
@@ -166,24 +160,22 @@ export const TableEntry = ({
 
       {visibleColumns.className && (
         <td
-          className="px-4 py-2 whitespace-nowrap max-w-[200px] truncate text-gray-900 dark:text-gray-300"
-          title={log.className}
-        >
+          className="px-4 py-2 whitespace-nowrap max-w-[200px] truncate text-gray-900 "
+          title={log.className}>
           {highlightText(log.className.split(".").pop() || "")}
         </td>
       )}
 
       {visibleColumns.method && (
         <td
-          className="px-4 py-2 whitespace-nowrap max-w-[200px] truncate text-gray-900 dark:text-gray-300"
-          title={log.method}
-        >
+          className="px-4 py-2 whitespace-nowrap max-w-[200px] truncate text-gray-900 "
+          title={log.method}>
           {highlightText(log.method)}
         </td>
       )}
 
       {visibleColumns.message && (
-        <td className="px-4 py-2 text-gray-900 dark:text-gray-300 max-w-lg break-words whitespace-normal">
+        <td className="px-4 py-2 text-gray-900  max-w-lg break-words whitespace-normal">
           {highlightText(log.message)}
         </td>
       )}

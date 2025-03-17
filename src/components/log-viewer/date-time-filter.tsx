@@ -73,10 +73,10 @@ export function DateTimeFilter({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-lg mx-auto">
+    <div className="bg-white  p-6 rounded-xl shadow-lg max-w-lg mx-auto">
       {/* Header with title and enable/disable toggle */}
       <div className="flex justify-between items-center border-b pb-4">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+        <h2 className="text-lg font-semibold text-gray-800 ">
           📆 Date & Time Filter
         </h2>
         <label className="flex items-center space-x-2 cursor-pointer">
@@ -84,18 +84,16 @@ export function DateTimeFilter({
             type="checkbox"
             checked={isDateFilterActive} // Controls whether the filter is active
             onChange={(e) => setIsDateFilterActive(e.target.checked)}
-            className="w-5 h-5 text-blue-600 dark:text-blue-400 focus:ring-blue-500 border-gray-300 rounded"
+            className="w-5 h-5 text-blue-600  focus:ring-blue-500 border-gray-300 rounded"
           />
-          <span className="text-sm text-gray-700 dark:text-gray-300">
-            Enable
-          </span>
+          <span className="text-sm text-gray-700 ">Enable</span>
         </label>
       </div>
 
       {/* Inputs for start and end date/time */}
       <div className="flex flex-row w-full mt-4 space-x-4">
         <div className="w-1/2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-700  mb-1">
             Start Date & Time
           </label>
           <input
@@ -106,12 +104,12 @@ export function DateTimeFilter({
             disabled={!isDateFilterActive} // Disable if filter is not active
             min={initialStartDate} // Minimum allowed value
             max={initialEndDate} // Maximum allowed value
-            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white dark:bg-gray-800 dark:border-gray-600"
+            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900   "
           />
         </div>
 
         <div className="w-1/2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-700  mb-1">
             End Date & Time
           </label>
           <input
@@ -122,7 +120,7 @@ export function DateTimeFilter({
             disabled={!isDateFilterActive} // Disable if filter is not active
             min={initialStartDate} // Minimum allowed value
             max={initialEndDate} // Maximum allowed value
-            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white dark:bg-gray-800 dark:border-gray-600"
+            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900   "
           />
         </div>
       </div>
@@ -130,14 +128,13 @@ export function DateTimeFilter({
       {/* Button to restore initial dates */}
       <button
         onClick={resetToInitialDates}
-        className="w-full mt-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-      >
+        className="w-full mt-2 bg-gray-200  text-gray-800  py-2 px-4 rounded-lg hover:bg-gray-300  transition">
         Restore Initial Dates
       </button>
 
       {/* Error message */}
       {error && (
-        <p className="mt-2 text-red-500 text-sm font-medium bg-red-100 dark:bg-red-900 p-2 rounded-md">
+        <p className="mt-2 text-red-500 text-sm font-medium bg-red-100  p-2 rounded-md">
           {error}
         </p>
       )}

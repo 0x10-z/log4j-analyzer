@@ -29,8 +29,7 @@ export function FilterBar({
           className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+          stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -41,7 +40,7 @@ export function FilterBar({
         <input
           type="search"
           placeholder="Search logs..."
-          className="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          className="w-full pl-8 pr-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
@@ -51,21 +50,18 @@ export function FilterBar({
               className="animate-spin h-4 w-4 text-gray-500"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <circle
                 className="opacity-25"
                 cx="12"
                 cy="12"
                 r="10"
                 stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
+                strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           </div>
         )}
@@ -76,18 +72,16 @@ export function FilterBar({
           className={`px-3 py-2 border rounded-md flex items-center gap-1 ${
             showFindings
               ? "bg-gray-800 text-white border-gray-700 hover:bg-gray-900"
-              : "border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+              : "border-gray-300  hover:bg-gray-100 "
           }`}
           onClick={toggleFindingsView}
-          title={showFindings ? "Show all logs" : "Show findings only"}
-        >
+          title={showFindings ? "Show all logs" : "Show findings only"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -98,23 +92,21 @@ export function FilterBar({
           <span className="hidden sm:inline">
             {showFindings ? "All Logs" : "Findings"}
           </span>
-          <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-semibold text-white bg-gray-500 rounded-full dark:bg-gray-700">
+          <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-semibold text-white bg-gray-500 rounded-full ">
             {findingsCount}
           </span>
         </button>
 
         {showFindings && (
           <button
-            className="p-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="p-2 border border-gray-300  rounded-md hover:bg-gray-100 "
             onClick={exportData}
-            title="Export data"
-          >
+            title="Export data">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1024 1024"
               width="1em"
-              height="1em"
-            >
+              height="1em">
               <path
                 fill="currentColor"
                 fill-rule="evenodd"
@@ -125,17 +117,15 @@ export function FilterBar({
         )}
 
         <button
-          className="p-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          className="p-2 border border-gray-300  rounded-md hover:bg-gray-100 "
           onClick={resetFilters}
-          title="Reset filters"
-        >
+          title="Reset filters">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -146,17 +136,15 @@ export function FilterBar({
         </button>
 
         <button
-          className="p-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          className="p-2 border border-gray-300  rounded-md hover:bg-gray-100 "
           onClick={openColumnSelector}
-          title="Select columns"
-        >
+          title="Select columns">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

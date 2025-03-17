@@ -80,21 +80,21 @@ export function LogTable({
   const closeContextMenu = () => setMenuData({ ...menuData, visible: false });
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <div className=" border-b border-gray-200 dark:border-gray-700 h-full">
+    <div className="bg-white  rounded-lg shadow-md">
+      <div className=" border-b border-gray-200  h-full">
         <div className="flex flex-row justify-between items-center w-full  p-4">
           {/* First Column: Log Info */}
           <div className="p-4 text-center">
             <h2 className="text-lg font-semibold mb-4 text-center">
               {showFindings ? "Findings" : "Log Records"}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 ">
               {totalFilteredCount} records found{" "}
               {visibleLogs.length < totalFilteredCount
                 ? `(showing ${visibleLogs.length})`
                 : ""}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 ">
               This file contains logs from <strong>{startDate}</strong> to{" "}
               <strong>{endDate}</strong>.
             </p>
@@ -118,22 +118,20 @@ export function LogTable({
       <div className="p-4">
         <div
           ref={tableRef}
-          className="rounded-md border border-gray-200 dark:border-gray-700 overflow-auto max-h-[600px]"
-          onScroll={handleScroll}
-        >
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="sticky top-0 bg-gray-50 dark:bg-gray-800">
+          className="rounded-md border border-gray-200  overflow-auto max-h-[600px]"
+          onScroll={handleScroll}>
+          <table className="min-w-full divide-y divide-gray-200 ">
+            <thead className="sticky top-0 bg-gray-50 ">
               <tr>
                 {visibleColumns.actions && (
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500  uppercase tracking-wider">
                     Action
                   </th>
                 )}
                 {visibleColumns.timestamp && (
                   <th
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleSort("formattedTimestamp")}
-                  >
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500  uppercase tracking-wider cursor-pointer hover:bg-gray-100 "
+                    onClick={() => handleSort("formattedTimestamp")}>
                     <div className="flex items-center gap-1">
                       Timestamp
                       {sortField === "formattedTimestamp" && (
@@ -144,8 +142,7 @@ export function LogTable({
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
+                          stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -160,9 +157,8 @@ export function LogTable({
 
                 {visibleColumns.level && (
                   <th
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleSort("level")}
-                  >
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500  uppercase tracking-wider cursor-pointer hover:bg-gray-100 "
+                    onClick={() => handleSort("level")}>
                     <div className="flex items-center gap-1">
                       Level
                       {sortField === "level" && (
@@ -173,8 +169,7 @@ export function LogTable({
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
+                          stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -189,9 +184,8 @@ export function LogTable({
 
                 {visibleColumns.className && (
                   <th
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleSort("className")}
-                  >
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500  uppercase tracking-wider cursor-pointer hover:bg-gray-100 "
+                    onClick={() => handleSort("className")}>
                     <div className="flex items-center gap-1">
                       Class
                       {sortField === "className" && (
@@ -202,8 +196,7 @@ export function LogTable({
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
+                          stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -218,9 +211,8 @@ export function LogTable({
 
                 {visibleColumns.method && (
                   <th
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleSort("method")}
-                  >
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500  uppercase tracking-wider cursor-pointer hover:bg-gray-100 "
+                    onClick={() => handleSort("method")}>
                     <div className="flex items-center gap-1">
                       Method
                       {sortField === "method" && (
@@ -231,8 +223,7 @@ export function LogTable({
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
+                          stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -246,42 +237,38 @@ export function LogTable({
                 )}
 
                 {visibleColumns.message && (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500  uppercase tracking-wider">
                     Message
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white  divide-y divide-gray-200 ">
               {visibleLogs.length === 0 ? (
                 <tr key="empty-state">
                   <td
                     colSpan={
                       Object.values(visibleColumns).filter(Boolean).length
                     }
-                    className="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
-                  >
+                    className="px-4 py-8 text-center text-gray-500 ">
                     {isSearching ? (
                       <div className="flex justify-center items-center">
                         <svg
                           className="animate-spin h-5 w-5 mr-3 text-gray-500"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <circle
                             className="opacity-25"
                             cx="12"
                             cy="12"
                             r="10"
                             stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
+                            strokeWidth="4"></circle>
                           <path
                             className="opacity-75"
                             fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         Searching logs...
                       </div>
@@ -319,21 +306,18 @@ export function LogTable({
                 className="animate-spin h-5 w-5 text-gray-500"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
                   cy="12"
                   r="10"
                   stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
+                  strokeWidth="4"></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             </div>
           )}

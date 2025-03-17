@@ -137,7 +137,7 @@ export function FileUploader({
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl min-h-[300px]">
+    <div className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-xl min-h-[300px]">
       <div className="p-6 h-full">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-4 h-full">
@@ -145,11 +145,10 @@ export function FileUploader({
             <h3 className="text-xl font-semibold">Processing file...</h3>
 
             {/* Barra de progreso */}
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div
                 className="bg-gray-600 h-2.5 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              ></div>
+                style={{ width: `${progress}%` }}></div>
             </div>
 
             {/* Spinner animado */}
@@ -158,29 +157,25 @@ export function FileUploader({
             </div>
 
             {/* Texto de progreso */}
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 ">
               {progress < 100 ? `${progress}% complete` : "Finalizing..."}
             </p>
           </div>
         ) : (
           <div
             className={`border-2 border-dashed rounded-lg p-12 text-center h-full ${
-              isDragging
-                ? "border-gray-500 bg-gray-50 dark:bg-gray-900/20"
-                : "border-gray-300 dark:border-gray-600"
+              isDragging ? "border-gray-500 bg-gray-50 " : "border-gray-300 "
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
+            onDrop={handleDrop}>
             <div className="flex flex-col items-center justify-center gap-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-12 w-12 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -188,10 +183,10 @@ export function FileUploader({
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
-              <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
+              <h3 className="text-xl font-medium text-gray-800 ">
                 Drag & drop your log4j XML file
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-sm text-gray-500  mb-4">
                 or click to select a file
               </p>
               <label className="cursor-pointer">
@@ -210,14 +205,13 @@ export function FileUploader({
         )}
 
         {error && (
-          <div className="mt-4 p-4 bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 rounded-md flex items-center gap-2">
+          <div className="mt-4 p-4 bg-red-100 text-red-800   rounded-md flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

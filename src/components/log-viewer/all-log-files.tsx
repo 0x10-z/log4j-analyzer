@@ -134,14 +134,13 @@ export const LogFiles = ({
           <div className="relative w-full h-6 bg-gray-200 rounded-full overflow-hidden shadow">
             <div
               className="absolute top-0 left-0 h-full bg-gray-700 transition-width duration-300"
-              style={{ width: `${loadProgress}%` }}
-            ></div>
+              style={{ width: `${loadProgress}%` }}></div>
           </div>
         </div>
       ) : (
         startDate &&
         endDate && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
+          <p className="text-sm text-gray-500  mt-4 text-center">
             Logs from <strong>{startDate}</strong> to <strong>{endDate}</strong>
             .
           </p>

@@ -130,8 +130,7 @@ export function LogViewer({
         <span
           className={`px-2 py-1 text-xs rounded-full ${getLevelBadgeColor(
             level
-          )}`}
-        >
+          )}`}>
           {level}
         </span>
       ),
@@ -286,16 +285,15 @@ export function LogViewer({
       <button onClick={handleDownloadLogs}>Descargar Logs</button>
       <div className="grid grid-cols-12 gap-3 shadow-xl">
         {/* Level ocupa menos espacio */}
-        <div className="col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="col-span-2 bg-white  p-4 rounded-lg shadow-md">
+          <div className="pb-3 border-b border-gray-200 ">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -319,16 +317,15 @@ export function LogViewer({
         </div>
 
         {/* Class y Method ocupan más espacio */}
-        <div className="col-span-5 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="col-span-5 bg-white  p-4 rounded-lg shadow-md">
+          <div className="pb-3 border-b border-gray-200 ">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -351,16 +348,15 @@ export function LogViewer({
           </div>
         </div>
 
-        <div className="col-span-5 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="col-span-5 bg-white  p-4 rounded-lg shadow-md">
+          <div className="pb-3 border-b border-gray-200 ">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

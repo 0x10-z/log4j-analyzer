@@ -9,7 +9,7 @@ export function useHighlightText(searchText: string) {
 
       return parts.map((part, i) =>
         part.toLowerCase() === searchText.toLowerCase() ? (
-          <span key={i} className="bg-yellow-200 dark:bg-yellow-800">
+          <span key={i} className="bg-yellow-200 ">
             {part}
           </span>
         ) : (
