@@ -51,8 +51,8 @@ This will launch the app at **`http://localhost:5173/`**.
 🔹 **Multi-Selection for Log Levels**  
 → Allow users to filter by multiple severity levels at once (e.g., `ERROR` + `WARN`).
 
-🔹 **Timestamp standardization**  
-→ Standardize shown timestamps.
+🔹 **Show summary of errors**  
+→ Show badges about number of errors/warnings/debugs.
 
 ---
 
