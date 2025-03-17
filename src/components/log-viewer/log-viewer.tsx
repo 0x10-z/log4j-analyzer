@@ -249,23 +249,6 @@ export function LogViewer({
     setIsDateFilterActive(true);
   };
 
-  const handleDownloadLogs = () => {
-    if (!logs) {
-      console.error("No logs available to download.");
-      return;
-    }
-
-    const blob = new Blob([JSON.stringify(logs, null, 2)], {
-      type: "application/json",
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "allLogs.json";
-    link.click();
-    URL.revokeObjectURL(link.href);
-  };
-
   const systemDetails = extractSystemDetails(logs);
 
   return (
@@ -282,7 +265,6 @@ export function LogViewer({
         exportData={() => (showFindings ? exportFindings() : null)}
         openColumnSelector={() => setColumnSelectorOpen(true)}
       />
-      <button onClick={handleDownloadLogs}>Descargar Logs</button>
       <div className="grid grid-cols-12 gap-3 shadow-xl">
         {/* Level ocupa menos espacio */}
         <div className="col-span-2 bg-white  p-4 rounded-lg shadow-md">
