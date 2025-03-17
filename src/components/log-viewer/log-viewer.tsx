@@ -8,7 +8,6 @@ import { useLogFiltering } from "@/hooks/use-log-filtering";
 import { DateTimeFilter } from "./date-time-filter";
 import Select from "react-select";
 import getLevelBadgeColor, {
-  extractSystemDetails,
   getLogsMinimumAndMaximumDate,
   parseDate,
 } from "@/utils/log-utils";
@@ -250,10 +249,9 @@ export function LogViewer({
     setIsDateFilterActive(true);
   };
 
-  const systemDetails = extractSystemDetails(logs);
   return (
     <div className="space-y-4">
-      <SystemDetailsView details={systemDetails} />
+      <SystemDetailsView logs={logs} />
       <FilterBar
         searchText={searchText}
         setSearchText={setSearchText}

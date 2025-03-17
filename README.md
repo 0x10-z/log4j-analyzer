@@ -48,12 +48,6 @@ This will launch the app at **`http://localhost:5173/`**.
 🔹 **Integrate OpenAI for Log Analysis**  
 → Use AI to detect patterns, anomalies, and provide insights from log files. 🤖
 
-🔹 **Multi-Selection for Log Levels**  
-→ Allow users to filter by multiple severity levels at once (e.g., `ERROR` + `WARN`).
-
-🔹 **Show summary of errors**  
-→ Show badges about number of errors/warnings/debugs.
-
 ---
 
 ## 📜 **License**
