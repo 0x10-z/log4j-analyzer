@@ -1,17 +1,11 @@
 import React from "react";
+import { SystemDetails } from "@/types/log-types";
 
 interface SystemDetailsProps {
-  details: {
-    machineName?: string;
-    version?: string;
-    architecture?: string;
-    osName?: string;
-    osVersion?: string;
-    osType?: string;
-  };
+  details: SystemDetails;
 }
 
-const SystemDetails: React.FC<SystemDetailsProps> = ({ details }) => {
+const SystemDetailsView: React.FC<SystemDetailsProps> = ({ details }) => {
   const { machineName, version, architecture, osName, osVersion, osType } =
     details || {};
 
@@ -58,4 +52,4 @@ const SystemDetails: React.FC<SystemDetailsProps> = ({ details }) => {
   );
 };
 
-export default SystemDetails;
+export default SystemDetailsView;

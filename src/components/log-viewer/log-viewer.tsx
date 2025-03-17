@@ -13,7 +13,7 @@ import getLevelBadgeColor, {
   parseDate,
 } from "@/utils/log-utils";
 import { Entry } from "@zip.js/zip.js";
-import SystemDetails from "./system-details";
+import SystemDetailsView from "./system-details";
 
 interface LogViewerProps {
   onLogsLoaded: (logs: LogEntry[]) => void;
@@ -253,7 +253,7 @@ export function LogViewer({
 
   return (
     <div className="space-y-4">
-      <SystemDetails details={systemDetails} />
+      <SystemDetailsView details={systemDetails} />
       <FilterBar
         searchText={searchText}
         setSearchText={setSearchText}
