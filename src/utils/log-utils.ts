@@ -97,8 +97,8 @@ const parseLogEvent = (event: Element, index: number): LogEntry => {
     id: index,
     timestamp: timestamp ? Number.parseInt(timestamp) : 0,
     formattedTimestamp:
-      properties["Sender Timestamp"] ||
-      new Date(Number.parseInt(timestamp || "0")).toISOString(),
+      new Date(Number.parseInt(timestamp || "0")).toLocaleString() ||
+      properties["Sender Timestamp"],
     level: level || "",
     logger: logger || "",
     thread: thread || "",
