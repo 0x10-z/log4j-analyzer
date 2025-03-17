@@ -51,6 +51,7 @@ export function LogViewer({
   const {
     searchText,
     setSearchText,
+    levelFilter,
     setLevelFilter,
     setClassFilter,
     setMethodFilter,
@@ -123,14 +124,14 @@ export function LogViewer({
   };
 
   const allLevelsOptions = [
-    { value: "all", label: "All levels" },
     ...uniqueLevels.map((level) => ({
       value: level,
       label: (
         <span
           className={`px-2 py-1 text-xs rounded-full ${getLevelBadgeColor(
             level
-          )}`}>
+          )}`}
+        >
           {level}
         </span>
       ),
@@ -250,7 +251,6 @@ export function LogViewer({
   };
 
   const systemDetails = extractSystemDetails(logs);
-
   return (
     <div className="space-y-4">
       <SystemDetailsView details={systemDetails} />
@@ -267,15 +267,16 @@ export function LogViewer({
       />
       <div className="grid grid-cols-12 gap-3 shadow-xl">
         {/* Level ocupa menos espacio */}
-        <div className="col-span-2 bg-white  p-4 rounded-lg shadow-md">
-          <div className="pb-3 border-b border-gray-200 ">
+        <div className="col-span-3 bg-white p-4 rounded-lg shadow-md">
+          <div className="pb-3 border-b border-gray-200">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -290,16 +291,27 @@ export function LogViewer({
             <Select
               className="w-full text-black"
               options={allLevelsOptions}
-              onChange={(selected) => setLevelFilter(selected?.value || "all")}
+              isMulti
+              value={allLevelsOptions.filter((option) =>
+                levelFilter.includes(option.value)
+              )}
+              onChange={(selectedOptions) => {
+                const selectedValues = selectedOptions
+                  ? selectedOptions.map((option) => option.value)
+                  : [];
+                setLevelFilter(selectedValues);
+              }}
               placeholder="Select a level"
               menuPortalTarget={document.body}
-              styles={{ menu: (base) => ({ ...base, zIndex: 99 }) }}
+              styles={{
+                menu: (base) => ({ ...base, zIndex: 99 }),
+              }}
             />
           </div>
         </div>
 
         {/* Class y Method ocupan más espacio */}
-        <div className="col-span-5 bg-white  p-4 rounded-lg shadow-md">
+        <div className="col-span-4 bg-white  p-4 rounded-lg shadow-md">
           <div className="pb-3 border-b border-gray-200 ">
             <h3 className="text-sm font-medium flex items-center gap-2">
               <svg
@@ -307,7 +319,8 @@ export function LogViewer({
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -338,7 +351,8 @@ export function LogViewer({
                 className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

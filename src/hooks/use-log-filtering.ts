@@ -10,7 +10,7 @@ export function useLogFiltering(
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 300); // 300ms debounce
 
-  const [levelFilter, setLevelFilter] = useState<string>("all");
+  const [levelFilter, setLevelFilter] = useState<string[]>([]);
   const [classFilter, setClassFilter] = useState<string>("all");
   const [methodFilter, setMethodFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<keyof LogEntry>("timestamp");
@@ -47,7 +47,8 @@ export function useLogFiltering(
     const sourceData = showFindings ? findings : logs;
 
     return sourceData.filter((log) => {
-      const matchesLevel = levelFilter === "all" || log.level === levelFilter;
+      const matchesLevel =
+        levelFilter.length === 0 || levelFilter.includes(log.level);
       const matchesClass =
         classFilter === "all" || log.className === classFilter;
       const matchesMethod =
@@ -207,7 +208,7 @@ export function useLogFiltering(
   // Reset all filters
   const resetFilters = () => {
     setSearchText("");
-    setLevelFilter("all");
+    setLevelFilter([]);
     setClassFilter("all");
     setMethodFilter("all");
     setStartDateTime("");
