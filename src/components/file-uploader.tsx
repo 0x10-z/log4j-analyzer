@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { LogEntry } from "@/types/log-types";
-import { extractBVCLog } from "@/utils/zip-utils";
+import { extractLog } from "@/utils/zip-utils";
 import { Entry } from "@zip.js/zip.js";
 import { parseXmlContent } from "@/utils/log-utils";
 
@@ -103,7 +103,7 @@ export function FileUploader({
     };
 
     if (file.name.endsWith(".ram")) {
-      const result = await extractBVCLog(file);
+      const result = await extractLog(file);
       if (result && result.mainLog) {
         reader.readAsText(result.mainLog);
       } else {

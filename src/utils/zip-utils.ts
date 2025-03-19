@@ -43,7 +43,7 @@ export async function extractArchivedLogsFromZipFile(
   }
 }
 
-export async function extractBVCLog(file: File): Promise<{
+export async function extractLog(file: File): Promise<{
   mainLog: Blob;
   allEntries: {
     zipFilename: string;
@@ -56,9 +56,13 @@ export async function extractBVCLog(file: File): Promise<{
       return null;
     }
 
-    const entry = entries.find((e) => e.filename === "log\\BVC.xml");
+    const entry = entries.find(
+      (e) => e.filename.startsWith("log\\") && e.filename.endsWith(".xml")
+    );
     if (!entry) {
-      console.error("Error: 'log/BVC.xml' file does not exists in ZIP.");
+      console.error(
+        "Error: There are no entries under 'log' directory in ZIP."
+      );
       return null;
     }
 
@@ -79,7 +83,7 @@ export async function extractBVCLog(file: File): Promise<{
     const blob = await entry.getData?.(new BlobWriter("text/xml"));
 
     if (!blob) {
-      console.error("Error: 'log/BVC.xml' cannot be extracted.");
+      console.error("Error: 'log/*.xml' cannot be extracted.");
       return null;
     }
 
